@@ -12,7 +12,7 @@ class Map:
                                 width=20,
                                 height=20,
                                 entry=(0, 0),
-                                exit_=(1, 1),
+                                exit_=(19, 19),
                                 perfect=False,
                                 seed=self.level,
                                 asked_algo="dfs",
