@@ -41,8 +41,15 @@ class PlayingLevel(Scene):
 
     def handle_events(self, events: list[pygame.event.Event]) -> str | None:
         for event in events:
-            if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
-                return "main_menu"
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_ESCAPE:
+                    return "main_menu"
+                elif event.key == pygame.K_SPACE:
+                    self.level_id += 1
+                    if self.level_id > 10:
+                        return "main_menu"
+                    self.grid = self.load_map(self.level_id)
+                    print(f"-> Passage au niveau {self.level_id}")
         return None
 
     def update(self, framesync: float) -> None:
