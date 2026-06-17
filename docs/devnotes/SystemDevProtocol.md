@@ -1,22 +1,23 @@
 # DRAFT | Fully documented system
 
-> Version: `v0.6` System development protcol
+> Version: `v0.6` System Development Protocol
 
-> Author: `sayca-jferone` from `Sayca Labs`
+> Author: `sayca-jferone` => [Github (Sayca Labs)](https://github.com/Sayca-Jferone)
 
 ---
 
-## The 3 system views
+## The 3 System's Layers
 
 | Layer | Output | Format |
 |---|---|---|
 | **D1: Conditions** | `1-Rules.md` : From Subject to a Checklist | Markdown checkboxes |
 | **D2: Intentions** | `2-Logic.md` : system's logic to code | Mermaid / Markdown |
-| **D3: Implements** | `3-Debug.md` : for dev phase tracability. Optional. | Markdown |
+| **D3: Embodiment** | `3-Debug.md` : for dev phase tracability. Optional. | Markdown |
 
-```
+```markdown
+# Typical content of a DRAFT driven/audited system
 docs/devnotes/
-    0-Order.md    <- raw document with customer's request (ex: pdf esubjects)
+    0-Order.md    <- customer's orders documents (ex: PDF 42network subject)
     1-Rules.md    <- source of truth : the problem readable in 60 seconds
     2-Logic.md    <- logical contract : traceable, debuggable without touching code
     3-Debug.md    <- dev journal : decisions, retroactivity, resources

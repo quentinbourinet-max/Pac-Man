@@ -14,22 +14,22 @@
 | [x] | F4 | Resource management | Context managers for files/connections, no leaks | III.1 |
 | [x] | F5 | Type hints | On params, returns, vars; pass `mypy` (lint flags below) without errors | III.1 |
 | [ ] | F6 | Docstrings | PEP 257 (Google/NumPy) on functions and classes | III.1 |
-| [ ] | F7 | Paradigm | Object-oriented; modular, reusable architecture | IV |
-| [ ] | F8 | Graphical library | MLX or similar (simple graphical lib) | IV |
+| [x] | F7 | Paradigm | Object-oriented; modular, reusable architecture | IV |
+| [x] | F8 | Graphical library | MLX or similar (simple graphical lib) | IV |
 | [ ] | F9 | Makefile rule `install` | Install deps via pip/uv/pipx/other | III.2 |
 | [ ] | F10 | Makefile rule `run` | Execute main script | III.2 |
 | [ ] | F11 | Makefile rule `debug` | Run main script under pdb | III.2 |
 | [ ] | F12 | Makefile rule `clean` | Remove `__pycache__`, `.mypy_cache`, temp files | III.2 |
 | [ ] | F13 | Makefile rule `lint` | `flake8 .` + `mypy . --warn-return-any --warn-unused-ignores --ignore-missing-imports --disallow-untyped-defs --check-untyped-defs` | III.2 |
 | [ ] | F14 | Makefile rule `lint-strict` | (optional) `flake8 .` + `mypy . --strict` | III.2 |
-| [ ] | F15 | `.gitignore` | Excludes Python artifacts | III.3 |
+| [x] | F15 | `.gitignore` | Excludes Python artifacts | III.3 |
 | [ ] | F16 | CLI invocation | `python3 pac-man.py config.json` | V.1 |
 | [ ] | F17 | CLI args | Exactly one arg; must be a `.json` file (filename free) | V.1 |
-| [ ] | F18 | Error output policy | Clear messages, never a Python traceback | V.1, V.3 |
+| [x] | F18 | Error output policy | Clear messages, never a Python traceback | V.1, V.3 |
 | [ ] | F19 | Config format | JSON + comment lines starting with `#` ignored | V.2 |
 | [ ] | F20 | Git repository | Full source + packaging script/spec at repo root | VII |
 | [ ] | F21 | README.md | At repo root, in English, with required sections (see M-section) | IX |
-| [ ] | F22 | Project management | Evidence docs in a dedicated subdirectory of the repo | VIII |
+| [x] | F22 | Project management | Evidence docs in a dedicated subdirectory of the repo | VIII |
 
 ## 2. Mandatory
 | [x] | # | Item | Source |
@@ -117,11 +117,11 @@
 | [x] | # | Question | Resolution | Source |
 |---|---|---|---|---|
 | [ ] | A1 | Concrete values of X / Y / Z scoring points? | `[ASSUMED]` use config suggestions: points_per_pacgum=10 (X), points_per_super_pacgum=50 (Y), points_per_ghost=200 (Z); all configurable | V.2, VI.2/6 |
-| [ ] | A2 | A-Maze-ing package interface (functions, return type, maze encoding)? | `[ASSUMED]` unknown until assignment; loader must adapt at integration time, not before — flag for D.2 | V.4 |
+| [ ] | A2 | A-Maze-ing package interface (functions, return type, maze encoding)? | `[ASSUMED]` unknown until assignment; loader must adapt at integration time, not before - flag for D.2 | V.4 |
 | [ ] | A3 | Duration of "edible/short time" for ghosts after super-pacgum? | `[ASSUMED]` configurable, default a few seconds (align with respawn ~5-10s) | VI.3/4 |
 | [ ] | A4 | Eaten-ghost respawn delay exact value? | `[ASSUMED]` configurable, default within 5-10s range | VI.3 |
-| [ ] | A5 | Config may change during defense — which keys/ranges? | `[ASSUMED]` unknown; design config loader to clamp any value and ignore unknown keys so updates cannot crash it | V.3 (warning box) |
-| [ ] | A6 | "Most corridors" for pacgums — which cells excluded? | `[ASSUMED]` exclude corners (super-pacgums), player start, and ghost spawns; otherwise fill corridors — confirm in D.2 | VI.1/4 |
+| [ ] | A5 | Config may change during defense - which keys/ranges? | `[ASSUMED]` unknown; design config loader to clamp any value and ignore unknown keys so updates cannot crash it | V.3 (warning box) |
+| [ ] | A6 | "Most corridors" for pacgums - which cells excluded? | `[ASSUMED]` exclude corners (super-pacgums), player start, and ghost spawns; otherwise fill corridors - confirm in D.2 | VI.1/4 |
 | [ ] | A7 | Win condition wording: "all pacgums eaten" vs also super-pacgums? | `[ASSUMED]` level cleared when all pacgums AND super-pacgums consumed | VI.2 |
 | [ ] | A8 | Maze `width`/`height` source: config vs generator-imposed? | `[ASSUMED]` config-provided per level, passed to generator; clamp to safe defaults | V.2, VI.1 |
 | [ ] | A9 | Chapter X "Submission and peer-review" listed in ToC but absent from rendered PDF (ends at p.19) | `[ASSUMED]` no extra binding rules; standard 42 peer-review applies | ToC vs body |
@@ -131,6 +131,6 @@
 ### D.1 exit checklist
 - [x] 5 categories filled (Bonus thin: subject defines few true optionals)
 - [x] All ambiguities resolved or `[ASSUMED]` + rationale
-- [ ] All Open Points carry a final decision — O1-O7 still `[TO DECIDE]`, must be locked before D.2
+- [ ] All Open Points carry a final decision - O1-O7 still `[TO DECIDE]`, must be locked before D.2
 - [x] No open question can silently invalidate D.2 (A2/A5 explicitly deferred to integration with safe-by-design loaders)
 - [x] Dense, readable in ~60 seconds

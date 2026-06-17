@@ -14,8 +14,9 @@ def main():
     try:
         run()
         return 0
-    except KeyboardInterrupt as ki:
-        print(f"\n> Program interruption detected :\n  {ki}")
+    except KeyboardInterrupt:
+        print("\n> Program interruption detected."
+              f"\n  Leaving {PROGRAM} v{VERSION}.\n")
         return 130
     except Exception as e:
         print(f"\nUnexpected error occured:\n  {e}\n")
