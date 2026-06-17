@@ -10,21 +10,20 @@ from .scenes.main_menu import MainMenu
 from .scenes.credits_menu import CreditsMenu
 from .scenes.playing_level import PlayingLevel
 
-CONFIG_PATH = Path(__file__).resolve().parent.parent.parent / "data" / "config.json"
+CONFIG_PATH = Path(__file__).resolve().parent.parent.parent / "data" \
+    / "config.json"
 
 
 class Game:
     """The single engine: one window, one loop, one active scene at a time."""
 
     def __init__(self) -> None:
-        # json cfg extraction
         cfg = json.loads(CONFIG_PATH.read_text())["window"]
         self.width = cfg["width"]
         self.height = cfg["height"]
         self.fps = cfg["fps"]
         self.running = False
 
-        # pygame cfg initialization
         pygame.init()
         self.screen = pygame.display.set_mode((self.width, self.height))
         pygame.display.set_caption(cfg["title"])
@@ -42,7 +41,6 @@ class Game:
             return
         self.scene = self.registry[name](self)
 
-    # Main Runtime
     def run(self) -> None:
         self.running = True
         while self.running:
@@ -65,6 +63,3 @@ class Game:
 
 def run() -> None:
     Game().run()
-
-
-# =============================================================================

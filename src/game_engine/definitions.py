@@ -38,6 +38,3 @@ class Scene(ABC):
     def render(self, surface: Surface) -> None:
         """Draw the scene onto the given surface."""
         ...
-
-
-# =============================================================================

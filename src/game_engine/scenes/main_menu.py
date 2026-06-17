@@ -40,7 +40,8 @@ class MainMenu(Scene):
             font = pygame.font.Font(self.font_path, font_size)
         except (FileNotFoundError, pygame.error):
             print(f" /!\\ Police introuvable à {FONT_PATH}. Repli sur défaut.")
-            self.title_font = pygame.font.SysFont("monospace", title_size, bold=True)
+            self.title_font = pygame.font.SysFont("monospace",
+                                                  title_size, bold=True)
             font = pygame.font.SysFont("monospace", font_size)
         cx = self.game.width // 2
         button_width = max(200, self.game.width // 3)

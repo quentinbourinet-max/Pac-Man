@@ -1,4 +1,4 @@
-from level_generation import Map
+from game_engine.tools.level_generation import Map
 from game_engine.core import run
 
 PROGRAM = "Pac-Man"

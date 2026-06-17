@@ -14,7 +14,7 @@ class Map:
                                 entry=(0, 0),
                                 exit_=(19, 19),
                                 perfect=False,
-                                seed=self.level,
+                                seed=(1 if self.level == 1 else None),
                                 asked_algo="dfs",
                             )
         gen.generate()
