@@ -4,5 +4,40 @@
         "width": 1200,
         "height": 1000,
         "fps": 60
+    },
+
+    "game": {
+        "common": {
+            "points_per_gum": 10,
+            "points_per_power_gum": 50,
+            "points_1st_ghost": 200,
+            "points_2nd_ghost": 400,
+            "points_3th_ghost": 800,
+            "points_4th_ghost": 1600,
+            "points_per_cherry": 100,
+            "points_per_strawberry": 300,
+            "points_per_orange": 500,
+            "points_per_apple": 700,
+            "points_per_melon": 1000,
+            "points_per_galaxian": 2000,
+            "points_per_bell": 3000,
+            "points_per_key": 5000
+        },
+        "original": {
+            "lives": 3,
+            "level_max_time": 300,
+            "frightened_duration": 6.0,
+            "highscore_filename": "highscores.json",
+            "scatter_durations": [7, 7, 5, 5],
+            "chase_durations": [20, 20, 20, 999]
+        },
+        "ironman": {
+            "lives": 1,
+            "level_max_time": 180,
+            "frightened_duration": 5.0,
+            "highscore_filename": "highscores_ironman.json",
+            "scatter_durations": [7, 7, 5, 5],
+            "chase_durations": [30, 30, 30, 999]
+        }
     }
 }

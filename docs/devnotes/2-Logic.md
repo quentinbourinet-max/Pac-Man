@@ -19,7 +19,9 @@ turns a maze grid into a walkable/item model the entities read through `is_move_
 
 ---
 
-## LOGICAL VIEW
+## SYSTEM VIEW
+
+> **System view:** BIOPGE logic blocks v1.0 (Sayca Labs)
 
 <details>
 <summary>`pac-man.py`</summary>
@@ -37,7 +39,7 @@ turns a maze grid into a walkable/item model the entities read through `is_move_
 </details>
 
 <details>
-<summary>`game_engine/config.py`</summary>
+<summary>`game_engine/ config.py`</summary>
 
 | Field | Content |
 |---|---|
@@ -52,7 +54,7 @@ turns a maze grid into a walkable/item model the entities read through `is_move_
 </details>
 
 <details>
-<summary>`game_engine/core.py`</summary>
+<summary>`game_engine/ core.py`</summary>
 
 | Field | Content |
 |---|---|
@@ -67,7 +69,7 @@ turns a maze grid into a walkable/item model the entities read through `is_move_
 </details>
 
 <details>
-<summary>`game_engine/definitions.py`</summary>
+<summary>`game_engine/ definitions.py`</summary>
 
 | Field | Content |
 |---|---|
@@ -82,7 +84,7 @@ turns a maze grid into a walkable/item model the entities read through `is_move_
 </details>
 
 <details>
-<summary>`game_engine/scenes/main_menu.py`</summary>
+<summary>`game_engine/ scenes/ main_menu.py`</summary>
 
 | Field | Content |
 |---|---|
@@ -97,7 +99,7 @@ turns a maze grid into a walkable/item model the entities read through `is_move_
 </details>
 
 <details>
-<summary>`game_engine/scenes/instructions_menu.py`</summary>
+<summary>`game_engine/ scenes/ instructions_menu.py`</summary>
 
 | Field | Content |
 |---|---|
@@ -112,7 +114,7 @@ turns a maze grid into a walkable/item model the entities read through `is_move_
 </details>
 
 <details>
-<summary>`game_engine/scenes/playing_level.py`</summary>
+<summary>`game_engine/ scenes/ playing_level.py`</summary>
 
 | Field | Content |
 |---|---|
@@ -128,7 +130,7 @@ turns a maze grid into a walkable/item model the entities read through `is_move_
 </details>
 
 <details>
-<summary>`game_engine/scenes/scores_menu.py`</summary>
+<summary>`game_engine/ scenes/ scores_menu.py`</summary>
 
 | Field | Content |
 |---|---|
@@ -143,7 +145,7 @@ turns a maze grid into a walkable/item model the entities read through `is_move_
 </details>
 
 <details>
-<summary>`game_engine/scenes/end_screen.py`</summary>
+<summary>`game_engine/ scenes/ end_screen.py`</summary>
 
 | Field | Content |
 |---|---|
@@ -158,7 +160,7 @@ turns a maze grid into a walkable/item model the entities read through `is_move_
 </details>
 
 <details>
-<summary>`game_engine/ui/components.py`</summary>
+<summary>`game_engine/ ui/ components.py`</summary>
 
 | Field | Content |
 |---|---|
@@ -173,7 +175,7 @@ turns a maze grid into a walkable/item model the entities read through `is_move_
 </details>
 
 <details>
-<summary>`game_engine/ui/pause_hud.py`</summary>
+<summary>`game_engine/ ui/ pause_hud.py`</summary>
 
 | Field | Content |
 |---|---|
@@ -188,7 +190,7 @@ turns a maze grid into a walkable/item model the entities read through `is_move_
 </details>
 
 <details>
-<summary>`game_engine/entities/pacman.py`</summary>
+<summary>`game_engine/ entities/ pacman.py`</summary>
 
 | Field | Content |
 |---|---|
@@ -203,7 +205,7 @@ turns a maze grid into a walkable/item model the entities read through `is_move_
 </details>
 
 <details>
-<summary>`game_engine/entities/ghost.py`</summary>
+<summary>`game_engine/ entities/ ghost.py`</summary>
 
 | Field | Content |
 |---|---|
@@ -218,7 +220,7 @@ turns a maze grid into a walkable/item model the entities read through `is_move_
 </details>
 
 <details>
-<summary>`game_engine/tools/level_generation.py`</summary>
+<summary>`game_engine/ tools/ level_generation.py`</summary>
 
 | Field | Content |
 |---|---|
@@ -233,7 +235,7 @@ turns a maze grid into a walkable/item model the entities read through `is_move_
 </details>
 
 <details>
-<summary>`game_engine/tools/level_tools.py`</summary>
+<summary>`game_engine/ tools/ level_tools.py`</summary>
 
 | Field | Content |
 |---|---|
@@ -248,7 +250,7 @@ turns a maze grid into a walkable/item model the entities read through `is_move_
 </details>
 
 <details>
-<summary>`game_engine/tools/highscore.py`</summary>
+<summary>`game_engine/ tools/ highscore.py`</summary>
 
 | Field | Content |
 |---|---|
@@ -269,6 +271,3 @@ turns a maze grid into a walkable/item model the entities read through `is_move_
 - [x] All blocks complete
 - [x] `> Covers :` traces every D.1 ID at least once
 - [x] Cross-block I/O consistent (config -> engine -> scenes -> tools/highscore)
-- [x] Zero code written
-
-> Deferred to integration (D.3): A2/A5 - A-Maze-ing real interface + live config ranges confirmed only at peer-review; loaders are safe-by-design.

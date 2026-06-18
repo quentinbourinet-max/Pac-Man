@@ -11,7 +11,14 @@
 > jferone : interface + wrapping logique (`src/__main__.py`, `src/scenes/*`, `src/ui/*`).
 > qbourine : logique de jeu (`entities/*`, `tools/*`). Sections "à deux" pour plus tard.
 
+</details>
+
 ---
+
+`team`
+
+<details>
+<summary>Décisions verrouillées (O1-O7)</summary>
 
 ## Décisions verrouillées (O1-O7)
 
@@ -25,7 +32,14 @@
 | O6 | Cheat = skip de niveau (prio) + invincibilité (secondaire) ; pas de freeze fantômes |
 | O7 | Déploiement = Itch.io (gratuit, non-listé) |
 
+</details>
+
 ---
+
+`jferone`
+
+<details>
+<summary>🟦 UI + wrapping (`__main__.py`, `scenes/*`, `ui/*`)</summary>
 
 ## 🟦 jferone - UI + wrapping (`__main__.py`, `scenes/*`, `ui/*`)
 
@@ -45,7 +59,14 @@
 | [ ] | J12 | `playing_level` possède l'horloge scatter/chase et la passe aux fantômes | O3 |
 | [ ] | J13 | README complet : 1re ligne en italique + toutes les sections imposées | M59, M60, F21 |
 
+</details>
+
 ---
+
+`qbourine`
+
+<details>
+<summary>🟥 Logique de jeu (`entities/*`, `tools/*`)</summary>
 
 ## 🟥 qbourine - logique de jeu (`entities/*`, `tools/*`)
 
@@ -58,15 +79,21 @@
 | [ ] | Q5 | Wrapper `mazegen` : génération paresseuse, seed niveau 1 = 42, suivants random ; gérer échec générateur ; décider régénération par partie vs install (cf. point ouvert #3) | M9, M10, M19, M41 |
 | [ ] | Q6 | (cosmétique) Homogénéiser les états FR (`mort/appeure`) si voulu | F2 |
 
+</details>
+
 ---
 
-## 🟪 À deux - plus tard
+`team`
+
+<details>
+<summary>🟪 Plus tard</summary>
+
 
 | Fait | # | Tâche | Réf |
 |---|---|---|---|
 | [ ] | S1 | Parser config JSON-avec-commentaires `#` : defaults robustes, clamp, ignore clés inconnues, jamais de traceback | M2-M5, F19, A5 |
 | [ ] | S2 | CLI `pac-man.py config.json` : 1 arg, `.json`, messages d'erreur clairs | F16-F18 |
-| [ ] | S3 | Highscore persistant (JSON disque) : robuste fichier manquant/corrompu, load au start / save à la fin | M11-M15, O2 |
+| [x] | S3 | Highscore persistant (JSON disque) : robuste fichier manquant/corrompu, load au start / save à la fin | M11-M15, O2 |
 | [ ] | S4 | Loader A-Maze-ing officiel quand assigné (s'adapter au package, `PERFECT=False`) | M6-M10, A2 |
 | [ ] | S5 | Makefile : `install`, corriger `lint`/`lint-strict` (cible `src/`, pas `main.py`), `debug`, `clean` | F9-F14 |
 | [ ] | S6 | Déploiement Itch.io + instructions in-package (contrôles, options, config) | M55, M56, O7 |
@@ -74,9 +101,14 @@
 | [ ] | S8 | Docstrings PEP257 partout + passer `mypy`/`flake8` | F5, F6 |
 | [ ] | S9 | `pyproject.toml` : déclarer `pygame` et `mazegen` en dépendances | F9 |
 
+</details>
+
 ---
 
-## Points ouverts à trancher (non bloquants)
+`team`
+
+<details>
+<summary>Points non bloquants à trancher</summary>
 
 - [ ] **Cheat M40** : code dans `playing_level`, ajouter `M40` à son `Covers`.
 - [ ] **`settings_menu.py` orphelin** : M49 ne demande pas de "Settings". Recycler en `instructions_menu` (recommandé) ou supprimer.
@@ -84,8 +116,6 @@
 - [ ] **Pas de "ghost house"** : simplification assumée (spawns directs dans les coins) -> à mentionner dans le debrief doc.
 - [ ] **Durée frightened** : régler un défaut réaliste (~6s) au lieu de 30s en dur.
 
+</details>
+
 ---
-
-## Hors D.2 (packaging/doc, suivis ici uniquement)
-
-M55, M57, M58, M59, M60, F9-F15, F20-F22, F1, F2, F5, F6 - ne tracent vers aucun bloc logique de `2-Logic.md` (normal).
