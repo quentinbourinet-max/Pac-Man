@@ -50,8 +50,9 @@ class PlayingLevel(Scene):
                         (255, 182, 193),
                         (0, 255, 255),
                         (255, 165, 0)]
-        self.ghosts = [Ghost(self.ghost_spawn_coords[i], ghost_colors[i]) for
-                       i in range(4)]
+        ghost_names = ["Blinky", "Pinky", "Inky", "Clyde"]
+        self.ghosts = [Ghost(self.ghost_spawn_coords[i], ghost_colors[i],
+                             ghost_names[i]) for i in range(4)]
         self.frightened_timer = 0.0
         try:
             self.eat_gum_sound = pygame.mixer.Sound(str(SOUND_GUM_PATH))
@@ -68,6 +69,8 @@ class PlayingLevel(Scene):
         self.reset_positions()
         self.play_bg_music()
         self.go_to_scene = None
+        self.paused = False
+        self.pause_selection = 0
 
     def play_bg_music(self) -> None:
         """Charge et lance la musique de fond en boucle depuis le début."""
@@ -94,19 +97,21 @@ class PlayingLevel(Scene):
         for event in events:
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
-                    pygame.mixer.music.stop()
-                    return "main_menu"
-                elif event.key in (pygame.K_UP, pygame.K_z):
+                    self.game.pause_game()
+                    return None
+                elif event.key in (pygame.K_UP, pygame.K_w):
                     self.pacman.handle_input("UP")
                 elif event.key in (pygame.K_DOWN, pygame.K_s):
                     self.pacman.handle_input("DOWN")
-                elif event.key in (pygame.K_LEFT, pygame.K_q):
+                elif event.key in (pygame.K_LEFT, pygame.K_a):
                     self.pacman.handle_input("LEFT")
                 elif event.key in (pygame.K_RIGHT, pygame.K_d):
                     self.pacman.handle_input("RIGHT")
         return None
 
     def update(self, framesync: float) -> None:
+        if self.paused:
+            return
         if self.level_transition_timer > 0:
             self.level_transition_timer -= framesync
             if self.level_transition_timer <= 0:
@@ -145,7 +150,8 @@ class PlayingLevel(Scene):
                         ghost.state = "normal"
                         self.ghost_speed = 3.0
         for ghost in self.ghosts:
-            ghost.update(framesync, self.ghost_speed, self.tools)
+            ghost.update(framesync, self.ghost_speed, self.tools,
+                         self.pacman.coord, self.pacman.dir)
         moved_tile = self.pacman.update(framesync, self.tools)
         pac_pixel_x, pac_pixel_y = self.pacman.get_pixel_pos(tile_size,
                                                              self.tools)

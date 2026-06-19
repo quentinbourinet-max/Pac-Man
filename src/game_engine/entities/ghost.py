@@ -1,11 +1,13 @@
-import random
+from typing import List
 import pygame
 from game_engine.tools.level_tools import LevelTools
+from game_engine.tools.ghost_ai import GhostAI
 
 
 class Ghost:
 
-    def __init__(self, spawn_coord, color):
+    def __init__(self, spawn_coord, color, name):
+        self.name = name
         self.spawn_coord = list(spawn_coord)
         self.coord = list(spawn_coord)
         self.color = color
@@ -13,8 +15,10 @@ class Ghost:
         self.dir = "NONE"
         self.move_timer = 0.0
         self.state = "normal"
+        self.ai = GhostAI()
 
-    def update(self, framesync, base_speed, tools: LevelTools):
+    def update(self, framesync, base_speed, tools: LevelTools,
+               pacman_coord: List[int], pacman_dir: str):
         """Gère le déplacement du fantôme à chaque frame."""
         current_interval = 1.0 / (base_speed * 2.0) if \
             self.state == "mort" else 1.0 / base_speed
@@ -22,55 +26,50 @@ class Ghost:
         if self.move_timer >= current_interval:
             self.move_timer -= current_interval
             if self.state == "mort":
-                self._move_to_base(tools.DIR_MAP)
+                self.dir = self.ai.find_next_move(self.coord,
+                                                  self.spawn_coord,
+                                                  tools, self.dir)
+            elif self.state == "appeure":
+                self.dir = self.ai.get_flee_direction(self.coord, pacman_coord,
+                                                      tools, self.dir)
             else:
-                self._move_normal(tools)
-
-    def _move_to_base(self, dir_map):
-        """Logique de retour à la base (ignore les murs)."""
-        dx = self.spawn_coord[0] - self.coord[0]
-        dy = self.spawn_coord[1] - self.coord[1]
-        if dx == 0 and dy == 0:
-            self.state = "normal"
-            self.dir = "NONE"
-        else:
-            if abs(dx) > abs(dy):
-                self.dir = "RIGHT" if dx > 0 else "LEFT"
-            else:
-                self.dir = "DOWN" if dy > 0 else "UP"
-            dc, dr = dir_map[self.dir]
-            self.coord[0] += dc
-            self.coord[1] += dr
-
-    def _move_normal(self, tools: LevelTools):
-        """Logique de déplacement standard et apeuré (respecte les murs)."""
-        possible_dirs = []
-        for d in ["UP", "DOWN", "LEFT", "RIGHT"]:
-            if tools.is_move_possible(self.coord[0], self.coord[1], d):
-                opposing = {"UP": "DOWN",
-                            "DOWN": "UP",
-                            "LEFT": "RIGHT",
-                            "RIGHT": "LEFT"}
-                if d != opposing.get(self.dir, "NONE") or self.dir == "NONE":
-                    possible_dirs.append(d)
-        if not possible_dirs:
-            possible_dirs = [d for d in ["UP", "DOWN", "LEFT", "RIGHT"]
-                             if tools.is_move_possible(self.coord[0],
-                                                       self.coord[1], d)]
-        current_still_possible = tools.is_move_possible(self.coord[0],
-                                                        self.coord[1],
-                                                        self.dir)
-        if not current_still_possible or (len(possible_dirs) > 1 and
-                                          random.random() < 0.3) or \
-                self.dir == "NONE":
-            if possible_dirs:
-                self.dir = random.choice(possible_dirs)
-            else:
+                if self.name == "Inky":
+                    self.dir = self.ai.get_random_move(self.coord, tools,
+                                                       self.dir)
+                else:
+                    target = self._get_chase_target(pacman_coord, pacman_dir,
+                                                    tools)
+                    self.dir = self.ai.find_next_move(self.coord, target,
+                                                      tools, self.dir)
+            if self.dir != "NONE":
+                dc, dr = tools.DIR_MAP[self.dir]
+                self.coord[0] += dc
+                self.coord[1] += dr
+            if self.state == "mort" and self.coord == self.spawn_coord:
+                self.state = "normal"
                 self.dir = "NONE"
-        if self.dir != "NONE":
-            dc, dr = tools.DIR_MAP[self.dir]
-            self.coord[0] += dc
-            self.coord[1] += dr
+
+    def _get_chase_target(self, pacman_coord: list[int], pacman_dir: str,
+                          tools: LevelTools) -> list[int]:
+        max_col = len(tools.grid[0]) - 1
+        max_row = len(tools.grid) - 1
+        target = list(pacman_coord)
+
+        if self.name == "Blinky":
+            target = list(pacman_coord)
+        elif self.name == "Pinky":
+            dc, dr = tools.DIR_MAP.get(pacman_dir, (0, 0))
+            target = [pacman_coord[0] + 4 * dc, pacman_coord[1] + 4 * dr]
+        elif self.name == "Clyde":
+            dist = abs(self.coord[0] - pacman_coord[0]) + abs(self.coord[1] -
+                                                              pacman_coord[1])
+            if dist > 8:
+                target = list(pacman_coord)
+            else:
+                target = [0, max_row]
+        target[0] = max(0, min(target[0], max_col))
+        target[1] = max(0, min(target[1], max_row))
+        return target
 
     def render(self, surface: pygame.Surface, offset_x: int, offset_y: int,
                tile_size: int, ghost_speed: float, tools: LevelTools):

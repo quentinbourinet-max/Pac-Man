@@ -9,6 +9,7 @@ from .definitions import QUIT, Scene
 from .scenes.main_menu import MainMenu
 from .scenes.credits_menu import CreditsMenu
 from .scenes.playing_level import PlayingLevel
+from .scenes.pause_menu import PauseMenu
 
 CONFIG_PATH = Path(__file__).resolve().parent.parent.parent / "data" \
     / "config.json"
@@ -34,12 +35,29 @@ class Game:
                                                 "level": PlayingLevel
                                                 }
         self.scene: Scene = self.registry["main_menu"](self)
+        self.paused_scene = None
 
     def change_scene(self, name: str) -> None:
         if name == QUIT:
             self.running = False
             return
+        self.paused_scene = None
         self.scene = self.registry[name](self)
+
+    def pause_game(self):
+        """Met en pause en créant une PauseMenu
+        et en gardant la scène de jeu."""
+        screenshot = self.screen.copy()
+        self.paused_scene = self.scene
+        self.scene = PauseMenu(self, background_surface=screenshot)
+        pygame.mixer.music.pause()
+
+    def resume_game(self):
+        """Revient à la scène de jeu sauvegardée."""
+        if self.paused_scene:
+            self.scene = self.paused_scene
+            self.paused_scene = None
+            pygame.mixer.music.unpause()
 
     def run(self) -> None:
         self.running = True
