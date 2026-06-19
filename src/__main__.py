@@ -1,3 +1,4 @@
+"""Game Engine entrypoint for Pac-Man."""
 from game_engine.tools.level_generation import Map
 from game_engine.core import run
 
@@ -7,9 +8,9 @@ AUTHORS = ["qbourine", "jferone"]
 
 
 def main():
-    for i in range(11):
-        if i >= 1:
-            map = Map(i)
+    for level in range(11):  # @jferone NOTE: Do we need a dynamic detector?
+        if level >= 1:
+            map = Map(level)
             map.save(map.create())
     try:
         run()

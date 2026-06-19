@@ -1,8 +1,8 @@
 """Main menu scene."""
 
+import pygame
 from typing import TYPE_CHECKING
 from pathlib import Path
-import pygame
 
 from ..definitions import QUIT, Scene
 from ..ui.components import Button
@@ -49,8 +49,8 @@ class MainMenu(Scene):
         start_y = self.game.height // 2 - (button_height // 2)
         spacing = button_height + max(10, self.game.height // 20)
 
-        entries = [("CREDITS", "credits"), ("PLAY", "level"),
-                   ("QUIT", QUIT)]
+        entries = [("PLAY", "level"), ("HIGHSCORES", "scores"),
+                   ("INSTRUCTIONS", "instructions"), ("QUIT", QUIT)]
         self.buttons: list[tuple[Button, str]] = []
         for i, (label, target) in enumerate(entries):
             btn = Button((cx, start_y + i * spacing),

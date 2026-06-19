@@ -1,7 +1,16 @@
 [project]
 name = "pac-man"
-version = "0.1.0"
-description = "Add your description here"
+version = "1.0.0"
+description = "Two-peers complete python game project, from 42next common core curriculum."
 readme = "README.md"
 requires-python = ">=3.10"
-dependencies = []
+dependencies = [
+    "pygame>=2.6",
+    "mazegen @ ./tools/mazegen-1.0.0-py3-none-any.whl",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=9.0",
+    "flake8>=7.0",
+]

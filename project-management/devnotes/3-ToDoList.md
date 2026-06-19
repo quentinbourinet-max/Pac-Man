@@ -45,18 +45,18 @@
 
 | Fait | # | Tâche | Réf |
 |---|---|---|---|
-| [ ] | J1 | Flow de scènes complet : MainMenu -> level -> GameOver/Victory + saisie nom -> MainMenu | M48, M46-M47 |
-| [ ] | J2 | Compléter MainMenu : ajouter "View Highscores" et "Instructions" | M49 |
-| [ ] | J3 | `scores_menu.py` : écran Top 10 (nom + score), branché sur le highscore | M14, M17 |
-| [ ] | J4 | Overlay-stase pause générique dans `ui/pause_hud.py` piloté par `core.py` (PAS une scène du registry). `P`/`ESC` ouvre/ferme ; Resume + Return to main menu ; gèle `update`, garde le rendu dessous, met la musique en pause | M45, M51 |
-| [ ] | J5 | HUD permanent : score, vies, niveau, temps restant | M50 |
-| [ ] | J6 | Écrans GameOver (score final + saisie nom) et Victory (score + félicitations + saisie nom) | M52, M53 |
-| [ ] | J7 | `ui/components.py` : widget TextInput (nom <= 10 char, alphanum + espaces) + idéalement nav clavier | M12, M16, M54 |
-| [ ] | J8 | Sortir les constantes en dur de `playing_level.py` (vies=3, temps=300, scores 10/50/200, frightened) vers la config | M2, M32-M34, M42 |
-| [ ] | J9 | Cheat : skip de niveau (prio) + invincibilité (secondaire). Ajouter `M40` au `Covers` de `playing_level` à l'implémentation | M40, O6, B3 |
-| [ ] | J10 | `__main__.py` : retour propre (`sys.exit(main())`), ne plus régénérer les niveaux à chaque lancement | F18 |
-| [ ] | J11 | Timeout (O4) : `lives -= 1` + `reset_positions()` + reset `remaining_time` (remplacer le retour menu actuel `playing_level.py:137`) | M42, O4 |
-| [ ] | J12 | `playing_level` possède l'horloge scatter/chase et la passe aux fantômes | O3 |
+| [x] | J1 | Flow de scènes complet : MainMenu -> level -> GameOver/Victory + saisie nom -> MainMenu | M48, M46-M47 |
+| [x] | J2 | Compléter MainMenu : ajouter "View Highscores" et "Instructions" | M49 |
+| [x] | J3 | `scores_menu.py` : écran Top 10 (nom + score), branché sur le highscore | M14, M17 |
+| [x] | J4 | Overlay-stase pause générique dans `ui/pause_hud.py` piloté par `core.py` (PAS une scène du registry). `P`/`ESC` ouvre/ferme ; Resume + Return to main menu ; gèle `update`, garde le rendu dessous, met la musique en pause | M45, M51 |
+| [x] | J5 | HUD permanent : score, vies, niveau, temps restant | M50 |
+| [x] | J6 | Écrans GameOver (score final + saisie nom) et Victory (score + félicitations + saisie nom) | M52, M53 |
+| [x] | J7 | `ui/components.py` : widget TextInput (nom <= 10 char, alphanum + espaces) + idéalement nav clavier | M12, M16, M54 |
+| [x] | J8 | Sortir les constantes en dur de `playing_level.py` (vies=3, temps=300, scores 10/50/200, frightened) vers la config | M2, M32-M34, M42 |
+| [x] | J9 | Cheat : skip de niveau (prio) + invincibilité (secondaire). Ajouter `M40` au `Covers` de `playing_level` à l'implémentation | M40, O6, B3 |
+| [⏸] | J10 | `__main__.py` : retour propre (`sys.exit(main())`), ne plus régénérer les niveaux à chaque lancement - **bloqué** : dépend de mazegen (Quentin/Q5) | F18 |
+| [x] | J11 | Timeout (O4) : `lives -= 1` + `reset_positions()` + reset `remaining_time` (remplacer le retour menu actuel `playing_level.py:137`) | M42, O4 |
+| [⏸] | J12 | `playing_level` possède l'horloge scatter/chase et la passe aux fantômes - **Quentin** | O3 |
 | [ ] | J13 | README complet : 1re ligne en italique + toutes les sections imposées | M59, M60, F21 |
 
 </details>
@@ -91,15 +91,15 @@
 
 | Fait | # | Tâche | Réf |
 |---|---|---|---|
-| [ ] | S1 | Parser config JSON-avec-commentaires `#` : defaults robustes, clamp, ignore clés inconnues, jamais de traceback | M2-M5, F19, A5 |
-| [ ] | S2 | CLI `pac-man.py config.json` : 1 arg, `.json`, messages d'erreur clairs | F16-F18 |
+| [x] | S1 | Parser config JSON-avec-commentaires `#` : defaults robustes, clamp, ignore clés inconnues, jamais de traceback | M2-M5, F19, A5 |
+| [x] | S2 | CLI `pac-man.py config.json` : 1 arg, `.json`, messages d'erreur clairs | F16-F18 |
 | [x] | S3 | Highscore persistant (JSON disque) : robuste fichier manquant/corrompu, load au start / save à la fin | M11-M15, O2 |
 | [ ] | S4 | Loader A-Maze-ing officiel quand assigné (s'adapter au package, `PERFECT=False`) | M6-M10, A2 |
 | [ ] | S5 | Makefile : `install`, corriger `lint`/`lint-strict` (cible `src/`, pas `main.py`), `debug`, `clean` | F9-F14 |
 | [ ] | S6 | Déploiement Itch.io + instructions in-package (contrôles, options, config) | M55, M56, O7 |
 | [ ] | S7 | Dossier project-management (timeline, risques, test plan) | M58, F22 |
 | [ ] | S8 | Docstrings PEP257 partout + passer `mypy`/`flake8` | F5, F6 |
-| [ ] | S9 | `pyproject.toml` : déclarer `pygame` et `mazegen` en dépendances | F9 |
+| [x] | S9 | `pyproject.toml` : déclarer `pygame` et `mazegen` en dépendances | F9 |
 
 </details>
 
@@ -110,11 +110,11 @@
 <details>
 <summary>Points non bloquants à trancher</summary>
 
-- [ ] **Cheat M40** : code dans `playing_level`, ajouter `M40` à son `Covers`.
-- [ ] **`settings_menu.py` orphelin** : M49 ne demande pas de "Settings". Recycler en `instructions_menu` (recommandé) ou supprimer.
-- [ ] **Régénération maze** : à chaque partie (rejouabilité) vs une fois à l'install ? -> tracer en A10 dans `1-Rules.md` si verrouillé.
+- [x] **Cheat M40** : code dans `playing_level` (F1 invincibilité, F2 skip niveau).
+- [x] **`settings_menu.py` orphelin** : recyclé en `instructions_menu.py`.
+- [ ] **Régénération maze** : à chaque partie (rejouabilité) vs une fois à l'install ? -> tracer en A10 dans `1-Rules.md` si verrouillé. (⏸ Quentin/Q5)
 - [ ] **Pas de "ghost house"** : simplification assumée (spawns directs dans les coins) -> à mentionner dans le debrief doc.
-- [ ] **Durée frightened** : régler un défaut réaliste (~6s) au lieu de 30s en dur.
+- [x] **Durée frightened** : 6.0s via `config.json` (clé `frightened_duration`).
 
 </details>
 

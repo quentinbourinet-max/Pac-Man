@@ -1,6 +1,6 @@
 # 2-Logic.md - Pacman
 
-| DRAFT D.2 | Authors: qbourine, jferone | Based on: 1-Rules.md (2026-06-17) | Date: 2026-06-17 |
+| DRAFT D.2 | Authors: qbourine, jferone | Based on: 1-Rules.md (2026-06-14) | Date: 2026-06-15 |
 |---|---|---|---|
 
 ---
@@ -24,7 +24,7 @@ turns a maze grid into a walkable/item model the entities read through `is_move_
 > **System view:** BIOPGE logic blocks v1.0 (Sayca Labs)
 
 <details>
-<summary>`pac-man.py`</summary>
+<summary>`__main.py__`</summary>
 
 | Field | Content |
 |---|---|
@@ -43,14 +43,14 @@ turns a maze grid into a walkable/item model the entities read through `is_move_
 
 | Field | Content |
 |---|---|
-| **Boundary** | Owns: reading the config file, defaults, clamping, key filtering. NOT: CLI, file path choice. |
-| **Inputs** | `path`: str to a `.json`-with-`#`-comments file. |
-| **Outputs** | A settings object exposing every key with a valid value (window, lives, times, points, seed, level dims, highscore filename, frightened/respawn durations). |
-| **Process** | 1. Read file -> 2. Drop lines starting `#` -> 3. Parse JSON -> 4. For each known key: take value if valid else clamp to default + log -> 5. Ignore unknown keys -> 6. Return settings. |
-| **Guarantees** | Every documented key is present and within range after the call; unknown keys never raise; a missing/corrupt file yields full defaults. |
-| **Errors** | missing/unreadable/invalid JSON -> log clear message, return defaults. invalid value -> clamp + log, continue. |
+| **Boundary** | Owns: reading the config file, defaults, clamping, key filtering, and merging shared defaults with the active game-mode preset. NOT: CLI, file path choice. |
+| **Inputs** | `path`: str to a `.json`-with-`#`-comments file; `mode`: active preset name (default `original`). |
+| **Outputs** | A settings object exposing every key with a valid value (window, lives, times, points, seed, level dims, highscore filename, frightened/respawn durations), built as `common` defaults overridden by the selected mode preset. |
+| **Process** | 1. Read file -> 2. Drop lines starting `#` -> 3. Parse JSON -> 4. Merge `common` + selected mode override -> 5. For each known key: take value if valid else clamp to default + log -> 6. Ignore unknown keys -> 7. Return settings. |
+| **Guarantees** | Every documented key is present and within range after the call; unknown keys never raise; a missing/corrupt file yields full defaults; the engine reads settings only through this object (no direct `config.json` read elsewhere). Single mode shipped, but the `common + override` merge stays mode-agnostic so the B4 selector grafts in without contract change. |
+| **Errors** | missing/unreadable/invalid JSON -> log clear message, return defaults. invalid value -> clamp + log, continue. unknown mode -> fall back to `common` only + log. |
 
-> Covers : F19, M2, M3, M4, M5, A1, A3, A5, A8, O1, O4
+> Covers : F19, M2, M3, M4, M5, B4, A1, A3, A5, A8, O1, O4
 </details>
 
 <details>
@@ -90,9 +90,9 @@ turns a maze grid into a walkable/item model the entities read through `is_move_
 |---|---|
 | **Boundary** | Owns: landing screen + navigation entries. NOT: gameplay, highscore storage. |
 | **Inputs** | mouse/keyboard events; window size (for proportional layout). |
-| **Outputs** | transition name: level / scores / instructions / credits / QUIT. |
+| **Outputs** | transition name: level / scores / instructions / QUIT. |
 | **Process** | 1. Build buttons proportional to window -> 2. On click/key return target. |
-| **Guarantees** | Items present: Start Game, View Highscores, Instructions, Exit (+ Credits). |
+| **Guarantees** | Items present: Start Game, View Highscores, Instructions, Exit. (Credits folded into the instructions screen, see below.) |
 | **Errors** | font missing -> fallback system font + log. |
 
 > Covers : M49, M54, M17
@@ -103,11 +103,11 @@ turns a maze grid into a walkable/item model the entities read through `is_move_
 
 | Field | Content |
 |---|---|
-| **Boundary** | Owns: static controls/options/config help screen. NOT: changing settings. |
+| **Boundary** | Owns: static controls/options/config help screen + credits footer. NOT: changing settings. (Single screen: subject requires Instructions, not a separate Settings/Credits; the existing `credits_menu.py` is renamed into this one, `settings_menu.py` is dropped.) |
 | **Inputs** | events (ESC/click to return). |
 | **Outputs** | transition main_menu. |
-| **Process** | 1. Render help text -> 2. Return main_menu on input. |
-| **Guarantees** | Controls, options and cheat activation are listed. |
+| **Process** | 1. Render help text (controls / options / config keys / cheat activation) -> 2. Render credits at the bottom -> 3. Return main_menu on input. |
+| **Guarantees** | Controls, options, cheat activation and authors' credits are listed. |
 | **Errors** | font missing -> fallback + log. |
 
 > Covers : M49, M56, M40
@@ -125,7 +125,7 @@ turns a maze grid into a walkable/item model the entities read through `is_move_
 | **Guarantees** | Score never decreases; Pac-Man only enters corridor cells; score+lives carried across levels; HUD always shows score/lives/level/time. |
 | **Errors** | missing assets (sound/font/sprite) -> silent/fallback + log, gameplay continues. |
 
-> Covers : M20-M34, M39, M42-M45, M50, A6, A7, O4 |
+> Covers : M20-M34, M39, M40, M42-M45, M50, A6, A7, O4 |
 
 </details>
 

@@ -1,6 +1,6 @@
 # §makefile:ENV ===============================================================
 
-.PHONY: install install-lint clean lint lint-strict \
+.PHONY: install install-lint clean lint lint-strict
 
 clean:
 	rm -rf \
