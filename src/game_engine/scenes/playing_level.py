@@ -4,8 +4,7 @@ from game_engine.tools.level_tools import LevelTools
 from game_engine.entities.ghost import Ghost
 from game_engine.entities.pacman import Pacman
 import pygame
-from ..definitions import Scene, PAUSE
-from ..config import get_gamemode_cfg
+from ..definitions import Scene
 
 BG_COLOR = (0, 0, 0)
 WALL_COLOR = (33, 33, 255)
@@ -36,14 +35,9 @@ class PlayingLevel(Scene):
         self.tools = LevelTools(self.level_id)
         self.item_grid = self.tools.init_item_grid()
         self.pacman = Pacman()
-        cfg = get_gamemode_cfg()
         self.score = 0
-        self.lives = cfg.get("lives", 3)
-        self.time_limit = float(cfg.get("level_max_time", 300))
-        self.frightened_duration = float(cfg.get("frightened_duration", 6.0))
-        self.points_gum = cfg.get("points_per_gum", 10)
-        self.points_power = cfg.get("points_per_power_gum", 50)
-        self.points_ghost = cfg.get("points_1st_ghost", 200)
+        self.lives = 3
+        self.time_limit = 300.0
         self.remaining_time = self.time_limit
         self.level_transition_timer = 0.0
         self.ghost_speed = 3.0
@@ -56,10 +50,10 @@ class PlayingLevel(Scene):
                         (255, 182, 193),
                         (0, 255, 255),
                         (255, 165, 0)]
-        self.ghosts = [Ghost(self.ghost_spawn_coords[i], ghost_colors[i]) for
-                       i in range(4)]
+        ghost_names = ["Blinky", "Pinky", "Inky", "Clyde"]
+        self.ghosts = [Ghost(self.ghost_spawn_coords[i], ghost_colors[i],
+                             ghost_names[i]) for i in range(4)]
         self.frightened_timer = 0.0
-        self.invincible = False
         try:
             self.eat_gum_sound = pygame.mixer.Sound(str(SOUND_GUM_PATH))
             self.eat_ghost_sound = pygame.mixer.Sound(str(SOUND_GHOST_PATH))
@@ -75,6 +69,8 @@ class PlayingLevel(Scene):
         self.reset_positions()
         self.play_bg_music()
         self.go_to_scene = None
+        self.paused = False
+        self.pause_selection = 0
 
     def play_bg_music(self) -> None:
         """Charge et lance la musique de fond en boucle depuis le début."""
@@ -95,47 +91,35 @@ class PlayingLevel(Scene):
                 ghost.dir = "NONE"
                 ghost.move_timer = 0.0
 
-    def _stop_music(self) -> None:
-        try:
-            pygame.mixer.music.stop()
-        except pygame.error:
-            pass
-
-    def _end_game(self, won: bool) -> None:
-        """Record the final outcome on the engine, route to the end screen."""
-        self.game.final_score = self.score
-        self.game.final_won = won
-        self._stop_music()
-        self.go_to_scene = "end_screen"
-
     def handle_events(self, events: list[pygame.event.Event]) -> str | None:
         if self.go_to_scene:
             return self.go_to_scene
         for event in events:
             if event.type == pygame.KEYDOWN:
-                if event.key in (pygame.K_ESCAPE, pygame.K_p):
-                    return PAUSE
-                elif event.key in (pygame.K_UP, pygame.K_z):
+                if event.key == pygame.K_ESCAPE:
+                    self.game.pause_game()
+                    return None
+                elif event.key in (pygame.K_UP, pygame.K_w):
                     self.pacman.handle_input("UP")
                 elif event.key in (pygame.K_DOWN, pygame.K_s):
                     self.pacman.handle_input("DOWN")
-                elif event.key in (pygame.K_LEFT, pygame.K_q):
+                elif event.key in (pygame.K_LEFT, pygame.K_a):
                     self.pacman.handle_input("LEFT")
                 elif event.key in (pygame.K_RIGHT, pygame.K_d):
                     self.pacman.handle_input("RIGHT")
-                elif event.key == pygame.K_F1:
-                    self.invincible = not self.invincible
-                elif event.key == pygame.K_F2:
-                    self.level_transition_timer = 0.0001
         return None
 
     def update(self, framesync: float) -> None:
+        if self.paused:
+            return
         if self.level_transition_timer > 0:
             self.level_transition_timer -= framesync
             if self.level_transition_timer <= 0:
                 self.level_id += 1
                 if self.level_id > 10:
-                    self._end_game(won=True)
+                    self.game.final_score = self.score
+                    self.game.final_won = True
+                    self.go_to_scene = "end_screen"
                     return
                 self.tools.grid = self.tools.load_map(self.level_id)
                 self.item_grid = self.tools.init_item_grid()
@@ -158,12 +142,9 @@ class PlayingLevel(Scene):
             tile_size = 20
         self.remaining_time -= framesync
         if self.remaining_time <= 0:
-            self.lives -= 1
-            if self.lives <= 0:
-                self._end_game(won=False)
-            else:
-                self.reset_positions()
-                self.remaining_time = self.time_limit
+            self.game.final_score = self.score
+            self.game.final_won = False
+            self.go_to_scene = "end_screen"
             return
         if self.frightened_timer > 0:
             self.frightened_timer -= framesync
@@ -173,7 +154,8 @@ class PlayingLevel(Scene):
                         ghost.state = "normal"
                         self.ghost_speed = 3.0
         for ghost in self.ghosts:
-            ghost.update(framesync, self.ghost_speed, self.tools)
+            ghost.update(framesync, self.ghost_speed, self.tools,
+                         self.pacman.coord, self.pacman.dir)
         moved_tile = self.pacman.update(framesync, self.tools)
         pac_pixel_x, pac_pixel_y = self.pacman.get_pixel_pos(tile_size,
                                                              self.tools)
@@ -191,20 +173,21 @@ class PlayingLevel(Scene):
                 (pac_pixel_y - ghost_pixel_y)**2
             if distance_sq < (tile_size * 0.7)**2:
                 if ghost.state == "normal":
-                    if self.invincible:
-                        continue
                     if self.lost_life_sound:
                         self.lost_life_sound.play()
                     self.lives -= 1
                     if self.lives <= 0:
-                        self._end_game(won=False)
+                        pygame.mixer.music.stop()
+                        self.game.final_score = self.score
+                        self.game.final_won = False
+                        self.go_to_scene = "end_screen"
                         return
                     else:
                         self.reset_positions()
                         return
                 elif ghost.state == "appeure":
                     ghost.state = "mort"
-                    self.score += self.points_ghost
+                    self.score += 200
                     if self.eat_ghost_sound:
                         self.eat_ghost_sound.play()
         if moved_tile:
@@ -216,10 +199,10 @@ class PlayingLevel(Scene):
                     if self.eat_gum_sound:
                         self.eat_gum_sound.play()
                     if item == 1:
-                        self.score += self.points_gum
+                        self.score += 10
                     elif item == 2:
-                        self.score += self.points_power
-                        self.frightened_timer = self.frightened_duration
+                        self.score += 50
+                        self.frightened_timer = 30.0
                         for g in self.ghosts:
                             if g.state == "normal":
                                 g.state = "appeure"
