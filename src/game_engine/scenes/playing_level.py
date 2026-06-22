@@ -117,7 +117,9 @@ class PlayingLevel(Scene):
             if self.level_transition_timer <= 0:
                 self.level_id += 1
                 if self.level_id > 10:
-                    self.go_to_scene = "main_menu"
+                    self.game.final_score = self.score
+                    self.game.final_won = True
+                    self.go_to_scene = "end_screen"
                     return
                 self.tools.grid = self.tools.load_map(self.level_id)
                 self.item_grid = self.tools.init_item_grid()
@@ -140,7 +142,9 @@ class PlayingLevel(Scene):
             tile_size = 20
         self.remaining_time -= framesync
         if self.remaining_time <= 0:
-            self.go_to_scene = "main_menu"
+            self.game.final_score = self.score
+            self.game.final_won = False
+            self.go_to_scene = "end_screen"
             return
         if self.frightened_timer > 0:
             self.frightened_timer -= framesync
@@ -174,7 +178,9 @@ class PlayingLevel(Scene):
                     self.lives -= 1
                     if self.lives <= 0:
                         pygame.mixer.music.stop()
-                        self.go_to_scene = "main_menu"
+                        self.game.final_score = self.score
+                        self.game.final_won = False
+                        self.go_to_scene = "end_screen"
                         return
                     else:
                         self.reset_positions()

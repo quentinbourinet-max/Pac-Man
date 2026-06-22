@@ -1,28 +1,47 @@
 import pygame
 from ..definitions import Scene
+from ..ui.components import Button
+from pathlib import Path
+
+ROOT_DIR = Path(__file__).resolve().parent.parent.parent.parent
+FONT_PATH = ROOT_DIR / "tools" / "visualisation_tools" / "Minecraftia.ttf"
 
 
 class PauseMenu(Scene):
     def __init__(self, game, background_surface) -> None:
         super().__init__(game)
-        self.background_surface = background_surface  # L'image du jeu figé
-        self.selection = 0  # 0: Reprendre, 1: Menu
+        self.background_surface = background_surface 
+        cx = self.game.width // 2
+        button_width = max(200, self.game.width // 3)
+        button_height = max(40, self.game.height // 12)
+        title_size = max(32, self.game.height // 10)
+        font_size = max(14, self.game.height // 25)
+        try:
+            self.title_font = pygame.font.Font(str(FONT_PATH), title_size)
+            font = pygame.font.Font(str(FONT_PATH), font_size)
+        except (FileNotFoundError, pygame.error):
+            self.title_font = pygame.font.SysFont("monospace", title_size,
+                                                  bold=True)
+            font = pygame.font.SysFont("monospace", font_size)
+        self.btn_resume = Button((cx, self.game.height // 2 - 40),
+                                 (button_width, button_height),
+                                 "Reprendre", font)
+        self.btn_menu = Button((cx, self.game.height // 2 + 50),
+                               (button_width, button_height),
+                               "Retour au menu", font)
 
     def handle_events(self, events: list[pygame.event.Event]) -> str | None:
         for event in events:
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
-                    return "playing"
-                elif event.key in (pygame.K_UP,
-                                   pygame.K_DOWN,
-                                   pygame.K_w,
-                                   pygame.K_s):
-                    self.selection = 1 - self.selection
-                elif event.key == pygame.K_RETURN:
-                    if self.selection == 0:
-                        self.game.resume_game()
-                    else:
-                        self.game.change_scene("main_menu")
+                    self.game.resume_game()
+                    return None
+            if self.btn_resume.handle_event(event):
+                self.game.resume_game()
+                return None
+            if self.btn_menu.handle_event(event):
+                self.game.change_scene("main_menu")
+                return None
         return None
 
     def update(self, framesync: float) -> None:
@@ -34,12 +53,8 @@ class PauseMenu(Scene):
         overlay.set_alpha(150)
         overlay.fill((0, 0, 0))
         surface.blit(overlay, (0, 0))
-        font = pygame.font.Font(None, 48)
-        title = font.render("PAUSE", True, (255, 255, 255))
-        resume = font.render("> Reprendre" if self.selection == 0 else
-                             "  Reprendre", True, (255, 255, 0))
-        menu = font.render("> Menu" if self.selection == 1 else "  Menu", True,
-                           (255, 255, 0))
-        surface.blit(title, title.get_rect(center=(self.game.width//2, 100)))
-        surface.blit(resume, resume.get_rect(center=(self.game.width//2, 250)))
-        surface.blit(menu, menu.get_rect(center=(self.game.width//2, 300)))
+        title = self.title_font.render("PAUSE", True, (255, 215, 0))
+        surface.blit(title, title.get_rect(center=(self.game.width // 2,
+                                                   self.game.height // 4)))
+        self.btn_resume.render(surface)
+        self.btn_menu.render(surface)

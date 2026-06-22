@@ -49,7 +49,9 @@ class MainMenu(Scene):
         start_y = self.game.height // 2 - (button_height // 2)
         spacing = button_height + max(10, self.game.height // 20)
 
-        entries = [("CREDITS", "credits"), ("PLAY", "level"),
+        entries = [("PLAY", "level"),
+                   ("SCORES", "scores"),
+                   ("HOW TO PLAY", "instructions"),
                    ("QUIT", QUIT)]
         self.buttons: list[tuple[Button, str]] = []
         for i, (label, target) in enumerate(entries):

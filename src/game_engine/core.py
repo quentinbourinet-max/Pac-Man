@@ -2,14 +2,14 @@
 
 import json
 from pathlib import Path
-
 import pygame
-
 from .definitions import QUIT, Scene
 from .scenes.main_menu import MainMenu
-from .scenes.credits_menu import CreditsMenu
 from .scenes.playing_level import PlayingLevel
 from .scenes.pause_menu import PauseMenu
+from .scenes.instructions_menu import InstructionsMenu
+from .scenes.scores_menu import ScoresMenu
+from .scenes.end_screen import EndScreen
 
 CONFIG_PATH = Path(__file__).resolve().parent.parent.parent / "data" \
     / "config.json"
@@ -30,10 +30,12 @@ class Game:
         pygame.display.set_caption(cfg["title"])
         self.clock = pygame.time.Clock()
         self.registry: dict[str, type[Scene]] = {
-                                                "main_menu": MainMenu,
-                                                "credits": CreditsMenu,
-                                                "level": PlayingLevel
-                                                }
+                                            "main_menu": MainMenu,
+                                            "level": PlayingLevel,
+                                            "instructions": InstructionsMenu,
+                                            "scores": ScoresMenu,
+                                            "end_screen": EndScreen
+                                            }
         self.scene: Scene = self.registry["main_menu"](self)
         self.paused_scene = None
 
@@ -72,7 +74,6 @@ class Game:
             self.scene.update(framesync)
             self.scene.render(self.screen)
             pygame.display.flip()
-
             if target is not None:
                 self.change_scene(target)
 
