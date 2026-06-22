@@ -1,4 +1,5 @@
 """Hand-rolled widgets (no ext menu library) so the display is fully ours."""
+
 # @jferone NOTE: Same logic extracted from "pygame-menu" module by @ppizarror.
 
 import pygame
@@ -30,6 +31,7 @@ class Button:
         return False
 
     def render(self, surface: pygame.Surface) -> None:
+        """Draw the button (hover-highlighted) with its centered label."""
         color = HOVER_COLOR if self.hovered else IDLE_COLOR
         pygame.draw.rect(surface, color, self.rect, border_radius=6)
         pygame.draw.rect(surface, BORDER_COLOR, self.rect, width=2,
@@ -52,9 +54,11 @@ class TextInput:
 
     @property
     def value(self) -> str:
+        """Current validated text content."""
         return self._value
 
     def feed_char(self, ch: str) -> None:
+        """Append one char if allowed (ASCII alnum/space, under max len)."""
         if len(self._value) >= self.max_length:
             return
         if not (ch.isascii() and (ch.isalnum() or ch == " ")):
@@ -62,6 +66,7 @@ class TextInput:
         self._value += ch
 
     def backspace(self) -> None:
+        """Delete the last character, if any."""
         self._value = self._value[:-1]
 
     def handle_event(self, event: pygame.event.Event) -> None:
@@ -74,6 +79,7 @@ class TextInput:
             self.feed_char(event.unicode)
 
     def render(self, surface: pygame.Surface) -> None:
+        """Draw the field box and the current text with a caret."""
         pygame.draw.rect(surface, IDLE_COLOR, self.rect, border_radius=6)
         pygame.draw.rect(surface, BORDER_COLOR, self.rect, width=2,
                          border_radius=6)

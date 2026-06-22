@@ -1,13 +1,12 @@
 """Game-over / victory scene with highscore name entry."""
 
+import pygame
 from pathlib import Path
 from typing import TYPE_CHECKING
-
-import pygame
-
 from ..definitions import Scene
 from ..ui.components import TextInput
 from ..tools import highscore
+from ..ui.theme import background
 from ..config import get_highscore_path
 
 if TYPE_CHECKING:
@@ -30,7 +29,7 @@ class EndScreen(Scene):
         super().__init__(game)
         self.score = getattr(game, "final_score", 0)
         self.won = getattr(game, "final_won", False)
-        self.highscore_path = get_highscore_path()
+        self.highscore_path = get_highscore_path(game.mode)
         size = max(18, game.height // 28)
         try:
             self.font = pygame.font.Font(str(FONT_PATH), size)
@@ -42,13 +41,16 @@ class EndScreen(Scene):
 
     @property
     def heading(self) -> str:
+        """Title line depending on the outcome (victory vs game over)."""
         return "VICTORY!" if self.won else "GAME OVER"
 
     def submit(self) -> None:
+        """Save the entered (or default) name + score to the highscore file."""
         name = self.input.value.strip() or DEFAULT_NAME
         highscore.save(self.highscore_path, name, self.score)
 
     def handle_events(self, events: list[pygame.event.Event]) -> str | None:
+        """Feed typing into the name field; Enter saves and returns to menu."""
         for event in events:
             if event.type == pygame.KEYDOWN and event.key == pygame.K_RETURN:
                 self.submit()
@@ -57,10 +59,12 @@ class EndScreen(Scene):
         return None
 
     def update(self, framesync: float) -> None:
+        """No timed logic on this screen."""
         ...
 
     def render(self, surface: pygame.Surface) -> None:
-        surface.fill(BG_COLOR)
+        """Draw outcome, final score and the name-entry field."""
+        surface.fill(background(self.game.mode, BG_COLOR))
         cx = self.game.width // 2
         head_color = WIN_COLOR if self.won else LOSE_COLOR
         head = self.font.render(self.heading, True, head_color)

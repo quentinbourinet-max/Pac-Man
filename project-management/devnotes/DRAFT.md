@@ -6,21 +6,21 @@
 
 ---
 
-## The 3 System's Layers
+## 3 layers of your system
 
 | Layer | Output | Format |
 |---|---|---|
-| **D1: Conditions** | `1-Rules.md` : From Subject to a Checklist | Markdown checkboxes |
-| **D2: Intentions** | `2-Logic.md` : system's logic to code | Mermaid / Markdown |
-| **D3: Embodiment** | `3-Debug.md` : for dev phase tracability. Optional. | Markdown |
+| **D1: Conditions** | `1-Rules.md` : your system conditions checklist | Markdown FMBOA check-boxes |
+| **D2: Intentions** | `2-Logic.md` : your system logic lives here | Markdown BIOPGE logic-blocks |
+| **D3: Embodiment** | `3-xxxxx.md` : your system debug files here | Logs/ToDoLists + Source code |
 
 ```markdown
-# Typical content of a DRAFT driven/audited system
+# Typical content of a DRAFT driven/audited/retroEngineered system
 docs/devnotes/
-    0-Order.md    <- customer's orders documents (ex: PDF 42network subject)
+    0-Order.md    <- customer's orders documents (ex: PDF 42network subject, a blurr idea/concept)
     1-Rules.md    <- source of truth : the problem readable in 60 seconds
-    2-Logic.md    <- logical contract : traceable, debuggable without touching code
-    3-Debug.md    <- dev journal : decisions, retroactivity, resources
+    2-Logic.md    <- logical contract : traceable, debuggable logic without touching code
+    3-State.md    <- dev journal : decisions, retroactivity, resources, code debbug phases
 ```
 
 ---

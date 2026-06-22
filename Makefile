@@ -1,6 +1,23 @@
-# §makefile:ENV ===============================================================
+# §makefile:EXEC --------------------------------------------------------------
+
+CONFIG ?= data/config.json
+
+run:
+	python3 pac-man.py $(CONFIG)
+
+debug:
+	python3 -m pdb pac-man.py $(CONFIG)
+
+# §makefile:ENV ---------------------------------------------------------------
 
 .PHONY: install install-lint clean lint lint-strict
+
+install:
+	pip install ./mazegenerator-*.whl
+	pip install pygame
+
+install-lint:
+	pip install flake8 mypy
 
 clean:
 	rm -rf \
@@ -8,21 +25,7 @@ clean:
 	.mypy_cache \
 	.pytest_cache
 
-# install:
-# 	uv sync --extra dev
-
-install-lint:
-	pip install flake8 mypy
-
-# §makefile:EXEC ==============================================================
-
-run:
-	python3 src/
-
-debug:
-	python3 -m pdb src/
-
-# §makefile:NORMS =============================================================
+# §makefile:LINT --------------------------------------------------------------
 
 MYPY_FLAGS = \
 			--warn-return-any \
@@ -33,8 +36,8 @@ MYPY_FLAGS = \
 
 lint:
 	flake8 .
-	mypy $(MYPY_FLAGS) src main.py
+	mypy $(MYPY_FLAGS) pac-man.py src/
 
 lint-strict:
 	flake8 .
-	mypy --strict src main.py
+	mypy --strict pac-man.py src/

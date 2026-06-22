@@ -6,7 +6,10 @@ readme = "README.md"
 requires-python = ">=3.10"
 dependencies = [
     "pygame>=2.6",
-    "mazegen @ ./tools/mazegen-1.0.0-py3-none-any.whl",
+    # A-Maze-ing package (mazegenerator) is the externally-assigned wheel,
+    # reinstalled at peer review. Its filename varies, so it is not pinned
+    # here by path; `make install` installs ./mazegenerator-*.whl from the
+    # repo root. Import-checked via the mypy override below.
 ]
 
 [project.optional-dependencies]
@@ -14,3 +17,7 @@ dev = [
     "pytest>=9.0",
     "flake8>=7.0",
 ]
+
+[[tool.mypy.overrides]]
+module = "mazegenerator"
+ignore_missing_imports = true
