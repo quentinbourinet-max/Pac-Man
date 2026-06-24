@@ -116,6 +116,7 @@ class _ConfigStore:
             if not isinstance(parsed, dict):
                 raise ValueError("config root must be a JSON object")
             return _deep_merge(_FALLBACK_CONFIG, parsed)
+
         except (OSError, JSONDecodeError, ValueError) as exc:
             print(f"> Config warning: {exc} - using built-in defaults.",
                   file=sys.stderr)

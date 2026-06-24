@@ -25,6 +25,7 @@ class PauseMenu(Scene):
         button_height = max(40, self.game.height // 12)
         title_size = max(32, self.game.height // 10)
         font_size = max(14, self.game.height // 25)
+
         try:
             self.title_font = pygame.font.Font(str(FONT_PATH), title_size)
             font = pygame.font.Font(str(FONT_PATH), font_size)
@@ -32,6 +33,7 @@ class PauseMenu(Scene):
             self.title_font = pygame.font.SysFont("monospace", title_size,
                                                   bold=True)
             font = pygame.font.SysFont("monospace", font_size)
+
         self.btn_resume = Button((cx, self.game.height // 2 - 40),
                                  (button_width, button_height),
                                  "RESUME", font)

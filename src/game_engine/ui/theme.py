@@ -1,6 +1,5 @@
 """Per-mode visual theming (scene background colours)."""
 
-# Pronounced, colourful purple used for every scene in Ironman mode.
 IRONMAN_BG = (50, 0, 0)
 
 

@@ -1,7 +1,5 @@
 """Hand-rolled widgets (no ext menu library) so the display is fully ours."""
 
-# @jferone NOTE: Same logic extracted from "pygame-menu" module by @ppizarror.
-
 import pygame
 
 IDLE_COLOR = (40, 40, 40)
@@ -9,6 +7,8 @@ HOVER_COLOR = (70, 70, 90)
 BORDER_COLOR = (255, 215, 0)
 TEXT_COLOR = (255, 255, 255)
 
+
+# @jferone NOTE: Same logic extracted from "pygame-menu" module by @ppizarror.
 
 class Button:
     """A clickable rectangle with a centered label and a hover highlight."""

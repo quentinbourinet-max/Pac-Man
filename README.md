@@ -159,35 +159,36 @@ written to tolerate missing files and bad input without raising. Two cheats
 ## General Software Architecture
 
 ```
-pac-man.py                 CLI entry point, validates the .json argument
+pac-man.py                 -> CLI entry point, validates the .json argument
 src/
-  __main__.py              module entry point
+  __main__.py              -> module entry point
   game_engine/
-    config.py              config loading, comment stripping, validation
-    core.py                window, main loop, scene registry
-    definitions.py         Scene contract and QUIT sentinel
+    config.py              -> config loading, comment stripping, validation
+    core.py                -> window, main loop, scene registry
+    definitions.py         -> Scene contract and QUIT sentinel
     entities/
-      pacman.py            player movement and animation
-      ghost.py             ghost state machine and targeting
+      pacman.py            -> player movement and animation
+      ghost.py             -> ghost state machine and targeting
     scenes/
-      main_menu.py         landing screen and mode toggle
-      playing_level.py     in-game orchestration and HUD
-      pause_menu.py        pause screen
-      scores_menu.py       top-ten board
-      instructions_menu.py how to play and credits
-      end_screen.py        game over and victory, name entry
+      main_menu.py         -> landing screen and mode toggle
+      playing_level.py     -> in-game orchestration and HUD
+      pause_menu.py        -> pause screen
+      scores_menu.py       -> top-ten board
+      instructions_menu.py -> how to play and credits
+      end_screen.py        -> game over and victory, name entry
     tools/
-      level_generation.py  adapter over the A-Maze-ing package
-      level_tools.py        grid loading, moves, item placement
-      ghost_ai.py           pathfinding and movement policies
-      highscore.py          persistent top-ten board
+      level_generation.py  -> adapter over the A-Maze-ing package
+      level_tools.py       -> grid loading, moves, item placement
+      ghost_ai.py          -> pathfinding and movement policies
+      highscore.py         -> persistent top-ten board
     ui/
-      components.py        Button and TextInput widgets
-      theme.py             per-mode background colour
+      components.py        -> Button and TextInput widgets
+      theme.py             -> per-mode background colour
 data/
-  config.json              default configuration
-  highscores*.json         saved boards
-tools/visualisation_tools  fonts, sprites and sounds
+  config.json              -> default configuration
+  highscores*.json         -> saved boards
+tools/
+  visualisation_tools      -> fonts, sprites and sounds
 ```
 
 `pac-man.py` validates the single `.json` argument, then hands the path to

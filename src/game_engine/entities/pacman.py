@@ -122,6 +122,7 @@ class Pacman:
                                                       int(screen_y +
                                                           tile_size // 2)))
             surface.blit(transformed_image, rect)
+
         else:
             pygame.draw.circle(surface, PACMAN_COLOR,
                                (int(screen_x + tile_size // 2),

@@ -3,7 +3,7 @@
 from abc import ABC, abstractmethod
 from pygame import event, Surface
 from typing import TYPE_CHECKING
-if TYPE_CHECKING:  # avoids the core <-> definitions cycle
+if TYPE_CHECKING:  # @jferone dev NOTE: avoids the core <-> definitions cycle
     from .core import Game
 
 QUIT = "quit"

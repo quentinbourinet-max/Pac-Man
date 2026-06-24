@@ -30,6 +30,7 @@ class Game:
         self._windowed_size = (self.width, self.height)
         self.fullscreen = False
         self.screen = pygame.display.set_mode((self.width, self.height))
+
         pygame.display.set_caption(cfg["title"])
         self.clock = pygame.time.Clock()
         self.registry: dict[str, type[Scene]] = {
@@ -82,6 +83,7 @@ class Game:
         while self.running:
             framesync = self.clock.tick(self.fps) / 1000.0
             events = pygame.event.get()
+
             for event in events:
                 if event.type == pygame.QUIT:
                     self.running = False
@@ -113,14 +115,17 @@ def launch(config_path: Path | None = None) -> int:
     if config_path is not None:
         from .config import set_config_path
         set_config_path(config_path.resolve())
+
     try:
         print(f"\n> {PROGRAM} v{VERSION} launched in another window.\n")
         run()
         print(f"\n> Leaving {PROGRAM} v{VERSION}.\n")
         return 0
+
     except KeyboardInterrupt:
         print(f"\n> Leaving {PROGRAM} v{VERSION} from keyboard interrupt.\n")
         return 130
+
     except Exception as exc:
         print(f"\n> Error: {exc}\n", file=sys.stderr)
         return 1

@@ -12,18 +12,18 @@ debug:
 
 .PHONY: install install-lint clean lint lint-strict
 
+clean:
+	rm -rf \
+	__pycache__ */__pycache__ */*/__pycache__ */*/*/__pycache__ \
+	.mypy_cache \
+	.pytest_cache
+
 install:
 	pip install ./mazegenerator-*.whl
 	pip install pygame
 
 install-lint:
 	pip install flake8 mypy
-
-clean:
-	rm -rf \
-	__pycache__ */__pycache__ */*/__pycache__ */*/*/__pycache__ \
-	.mypy_cache \
-	.pytest_cache
 
 # §makefile:LINT --------------------------------------------------------------
 
