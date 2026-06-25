@@ -1,3 +1,5 @@
+"""Pac-Man entity: player position, buffered movement and animation."""
+
 from pathlib import Path
 import pygame
 from game_engine.tools.level_tools import LevelTools
@@ -8,16 +10,20 @@ SPRITES_DIR = ROOT_DIR / "tools" / "visualisation_tools" / "pac-man_sprites"
 
 
 class Pacman:
-    def __init__(self) -> None:
-        self.speed = 4.0
+    """The player avatar: grid movement, direction buffering, animation."""
+
+    def __init__(self, spawn_coord: list[int] | None = None,
+                 speed: float = 4.0) -> None:
+        self.speed = speed
+        self.spawn_coord = list(spawn_coord) if spawn_coord else [9, 9]
         self.anim_delay = 0.08
-        self.frames = []
+        self.frames: list[pygame.Surface] | None = []
         self.load_sprites()
         self.reset()
 
     def reset(self) -> None:
-        """Remet Pac-Man dans sa configuration initiale."""
-        self.coord = [9, 9]
+        """Reset Pac-Man to its spawn cell (centre of the current maze)."""
+        self.coord = list(self.spawn_coord)
         self.dir = "NONE"
         self.next_dir = "NONE"
         self.last_dir = "RIGHT"
@@ -26,7 +32,7 @@ class Pacman:
         self.frame_index = 0
 
     def load_sprites(self) -> None:
-        """Charge les images de Pac-Man pour les animations."""
+        """Load the Pac-Man sprite frames used for animation."""
         try:
             img1 = pygame.image.load(str(SPRITES_DIR /
                                          "1.png")).convert_alpha()
@@ -36,19 +42,18 @@ class Pacman:
                                          "3.png")).convert_alpha()
             self.frames = [img1, img2, img3, img2]
         except FileNotFoundError:
-            print(" /!\\ Images de Pac-Man introuvables."
-                  "Dessin d'un rond jaune par défaut.")
+            print(" /!\\ Pac-Man sprites not found."
+                  " Drawing a yellow circle instead.")
             self.frames = None
 
     def handle_input(self, direction: str) -> None:
-        """Enregistre l'intention de direction du joueur."""
+        """Store the player's intended direction."""
         self.next_dir = direction
 
     def update(self, framesync: float, tools: LevelTools) -> bool:
         """
-        Met à jour les timers, l'animation et gère
-        le déplacement sur la grille.
-        Retourne True si Pac-Man change de case sur la grille à cette frame.
+        Update timers and animation, and handle movement on the grid.
+        Return True if Pac-Man moves to a new grid cell on this frame.
         """
         self.anim_timer += framesync
         if self.anim_timer >= self.anim_delay:
@@ -76,12 +81,12 @@ class Pacman:
 
     def get_pixel_pos(self, tile_size: int,
                       tools: LevelTools) -> tuple[float, float]:
-        """Calcule la position en pixels (sans offset écran)
-        pour la gestion des collisions."""
+        """Compute the pixel position (without screen offset)
+        for collision handling."""
         interval = 1.0 / self.speed
         progress = self.move_timer / interval
-        smooth_offset_x = 0
-        smooth_offset_y = 0
+        smooth_offset_x = 0.0
+        smooth_offset_y = 0.0
         if self.dir != "NONE":
             dc, dr = tools.DIR_MAP[self.dir]
             smooth_offset_x = -dc * (1.0 - progress) * tile_size
@@ -92,7 +97,7 @@ class Pacman:
 
     def render(self, surface: pygame.Surface, offset_x: int, offset_y: int,
                tile_size: int, tools: LevelTools) -> None:
-        """Dessine Pac-Man à l'écran."""
+        """Draw Pac-Man on screen."""
         pac_pixel_x, pac_pixel_y = self.get_pixel_pos(tile_size, tools)
         screen_x = offset_x + pac_pixel_x
         screen_y = offset_y + pac_pixel_y
@@ -117,6 +122,7 @@ class Pacman:
                                                       int(screen_y +
                                                           tile_size // 2)))
             surface.blit(transformed_image, rect)
+
         else:
             pygame.draw.circle(surface, PACMAN_COLOR,
                                (int(screen_x + tile_size // 2),

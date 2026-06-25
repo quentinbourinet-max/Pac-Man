@@ -1,12 +1,9 @@
 """Contracts every scene must honour, so the engine can swap them freely."""
 
-
 from abc import ABC, abstractmethod
-from typing import TYPE_CHECKING
-
 from pygame import event, Surface
-
-if TYPE_CHECKING:                       # avoids the core <-> definitions cycle
+from typing import TYPE_CHECKING
+if TYPE_CHECKING:  # @jferone dev NOTE: avoids the core <-> definitions cycle
     from .core import Game
 
 QUIT = "quit"
@@ -37,30 +34,4 @@ class Scene(ABC):
     @abstractmethod
     def render(self, surface: Surface) -> None:
         """Draw the scene onto the given surface."""
-        ...
-
-
-class Overlay(ABC):
-    """A modal layer drawn over a frozen scene (ex: the pause menu).
-
-    While an overlay is active the engine stops calling the scene's update
-    but keeps drawing it underneath. handle_events returns CLOSE to dismiss
-    the overlay (resume), a scene name to leave, or None to stay.
-    """
-
-    def __init__(self, game: "Game") -> None:
-        self.game = game
-
-    @abstractmethod
-    def handle_events(self, events: list[event.Event]) -> str | None:
-        """Return CLOSE to resume, a scene name to leave, or None to stay."""
-        ...
-
-    @abstractmethod
-    def render(self, surface: Surface) -> None:
-        """Draw the overlay on top of the already-rendered scene."""
-        ...
-
-    def on_close(self) -> None:
-        """Hook run when the engine dismisses this overlay (default no-op)."""
         ...
