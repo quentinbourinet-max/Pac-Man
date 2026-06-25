@@ -5,7 +5,7 @@ from typing import TYPE_CHECKING
 import pygame
 from ..definitions import Scene
 from ..ui.theme import background
-
+from ..ui.components import Button
 if TYPE_CHECKING:
     from ..core import Game
 
@@ -51,6 +51,9 @@ class InstructionsMenu(Scene):
         self.header_font = self._load_font(max(16, h // 42))
         self.body_font = self._load_font(max(13, h // 52))
         self.hint_font = self._load_font(max(12, h // 60))
+        self._last_width = game.width
+        self._last_height = game.height
+        self.build_ui()
 
     def _load_font(self, size: int, bold: bool = False) -> pygame.font.Font:
         """Load the pixel font at a size, falling back to a system font."""
@@ -59,18 +62,50 @@ class InstructionsMenu(Scene):
         except (FileNotFoundError, pygame.error):
             return pygame.font.SysFont("monospace", size, bold=bold)
 
+    def build_ui(self) -> None:
+        """Build the UI components with responsive sizes and margins."""
+        title_size = max(24, self.game.height // 16)
+        header_size = max(16, self.game.height // 30)
+        body_size = max(12, self.game.height // 40)
+        hint_size = max(10, self.game.height // 50)
+
+        try:
+            self.title_font = pygame.font.Font(str(FONT_PATH), title_size)
+            self.header_font = pygame.font.Font(str(FONT_PATH), header_size)
+            self.body_font = pygame.font.Font(str(FONT_PATH), body_size)
+            self.hint_font = pygame.font.Font(str(FONT_PATH), hint_size)
+        except (FileNotFoundError, pygame.error):
+            self.title_font = pygame.font.SysFont("monospace", title_size,
+                                                  bold=True)
+            self.header_font = pygame.font.SysFont("monospace", header_size,
+                                                   bold=True)
+            self.body_font = pygame.font.SysFont("monospace", body_size)
+            self.hint_font = pygame.font.SysFont("monospace", hint_size)
+        margin_x = max(10, self.game.width // 40)
+        margin_y = max(10, self.game.height // 40)
+        button_width = max(120, self.game.width // 8)
+        button_height = max(35, self.game.height // 16)
+        cx = margin_x + (button_width // 2)
+        cy = margin_y + (button_height // 2)
+        self.back_btn = Button((cx, cy), (button_width, button_height),
+                               "MENU", self.header_font)
+
     def handle_events(self, events: list[pygame.event.Event]) -> str | None:
         """Any ESC or click returns to the main menu."""
         for event in events:
             if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
                 return "main_menu"
-            if event.type == pygame.MOUSEBUTTONDOWN:
+            if self.back_btn.handle_event(event):
                 return "main_menu"
         return None
 
     def update(self, framesync: float) -> None:
-        """Static screen: nothing to update."""
-        ...
+        """Rebuild layout if window size changed."""
+        if self.game.width != self._last_width or \
+                self.game.height != self._last_height:
+            self._last_width = self.game.width
+            self._last_height = self.game.height
+            self.build_ui()
 
     def render(self, surface: pygame.Surface) -> None:
         """Draw the controls / cheats / configuration / credits sections."""
@@ -102,7 +137,4 @@ class InstructionsMenu(Scene):
                 text = self.body_font.render(line, True, TEXT_COLOR)
                 surface.blit(text, text.get_rect(midtop=(cx, y)))
                 y += body_step
-
-        hint = self.hint_font.render("ESC / click to go back", True,
-                                     HINT_COLOR)
-        surface.blit(hint, hint.get_rect(center=(cx, hint_cy)))
+        self.back_btn.render(surface)
