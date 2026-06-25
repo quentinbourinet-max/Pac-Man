@@ -43,5 +43,9 @@
             "scatter_durations": [7, 7, 5, 5],
             "chase_durations": [30, 30, 30, 999]
         }
-    }
+    },
+
+	"menu": {
+		
+	}
 }

@@ -50,7 +50,7 @@ class MainMenu(Scene):
 
     def _mode_label(self) -> str:
         """Label for the mode toggle reflecting the active mode."""
-        return f"MODE: {self.game.mode.upper()}"
+        return f"{self.game.mode.upper()}"
 
     def build_ui(self) -> None:
         """Build the UI scaled proportionally to the window size."""
@@ -69,9 +69,7 @@ class MainMenu(Scene):
         button_height = max(40, self.game.height // 12)
         start_y = self.game.height // 2 - (button_height // 2)
         spacing = button_height + max(10, self.game.height // 40)
-
         entries = [("PLAY", "level"),
-                   (self._mode_label(), MODE_TARGET),
                    ("SCORES", "scores"),
                    ("HOW TO PLAY", "instructions"),
                    ("QUIT", QUIT)]
@@ -80,6 +78,14 @@ class MainMenu(Scene):
             btn = Button((cx, start_y + i * spacing),
                          (button_width, button_height), label, font)
             self.buttons.append((btn, target))
+        margin_x = max(10, self.game.width // 40)
+        margin_y = max(10, self.game.height // 40)
+        mode_center_x = margin_x + (button_width // 2)
+        mode_center_y = margin_y + (button_height // 2)
+        mode_btn = Button((mode_center_x, mode_center_y),
+                          (button_width * 0.6, button_height * 0.9),
+                          self._mode_label(), font)
+        self.buttons.append((mode_btn, MODE_TARGET))
 
     def _cycle_mode(self) -> None:
         """Advance to the next configured mode and refresh the toggle label."""
