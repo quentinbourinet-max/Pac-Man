@@ -1,22 +1,15 @@
 """Top-10 highscore board scene."""
 
 import pygame
-from pathlib import Path
 from typing import TYPE_CHECKING
 from ..definitions import Scene
 from ..tools import highscore
 from ..ui.theme import background
-from ..config import get_highscore_path
+from ..config import get_ui_cfg, Paths
 from ..ui.components import Button
+
 if TYPE_CHECKING:
     from ..core import Game
-
-ROOT_DIR = Path(__file__).resolve().parent.parent.parent.parent
-FONT_PATH = ROOT_DIR / "tools" / "visualisation_tools" / "Minecraftia.ttf"
-BG_COLOR = (10, 10, 30)
-TITLE_COLOR = (255, 215, 0)
-TEXT_COLOR = (255, 255, 0)
-HINT_COLOR = (150, 150, 150)
 
 
 class ScoresMenu(Scene):
@@ -24,12 +17,12 @@ class ScoresMenu(Scene):
 
     def __init__(self, game: "Game") -> None:
         super().__init__(game)
-        self.highscore_path = get_highscore_path(game.mode)
+        self.mode = game.mode
         self.entries: list[dict[str, int | str]] = []
         self.refresh()
         size = max(18, game.height // 22)
         try:
-            self.font = pygame.font.Font(str(FONT_PATH), size)
+            self.font = pygame.font.Font(str(Paths.FONT), size)
         except (FileNotFoundError, pygame.error):
             self.font = pygame.font.SysFont("monospace", size)
         self._last_width = game.width
@@ -49,7 +42,7 @@ class ScoresMenu(Scene):
 
     def refresh(self) -> None:
         """Reload the board from disk and keep the top 10 by score."""
-        board = highscore.load(self.highscore_path)
+        board = highscore.load(self.mode)
         self.entries = sorted(board, key=lambda e: e["score"],
                               reverse=True)[:10]
 
@@ -79,14 +72,15 @@ class ScoresMenu(Scene):
 
     def render(self, surface: pygame.Surface) -> None:
         """Draw the Top-10 board title and columns beautifully aligned."""
-        surface.fill(background(self.game.mode, BG_COLOR))
+        colors = get_ui_cfg()
+        surface.fill(background(self.game.mode, colors["bg"]))
         cx = self.game.width // 2
-        title = self.font.render("HIGH SCORES", True, TITLE_COLOR)
+        title = self.font.render("HIGH SCORES", True, colors["title"])
         surface.blit(title, title.get_rect(center=(cx, self.game.height // 8)))
         step = self.font.get_height() + 8
         start_y = self.game.height // 4
         if not self.entries:
-            text = self.font.render("NO SCORES YET", True, "red")
+            text = self.font.render("NO SCORES YET", True, colors["lose"])
             surface.blit(text, text.get_rect(center=(cx, start_y)))
         else:
             board_width = max(400, self.game.width // 2)
@@ -95,16 +89,16 @@ class ScoresMenu(Scene):
             name_x = left_x + max(60, board_width // 6)
             for i, e in enumerate(self.entries):
                 y = start_y + i * step
-                rank_str = f"{i + 1}."
-                rank_surface = self.font.render(rank_str, True, "red")
-                rank_rect = rank_surface.get_rect(left=left_x, top=y)
-                surface.blit(rank_surface, rank_rect)
-                name_str = str(e["name"])
-                name_surface = self.font.render(name_str, True, "white")
-                name_rect = name_surface.get_rect(left=name_x, top=y)
-                surface.blit(name_surface, name_rect)
-                score_str = str(e["score"])
-                score_surface = self.font.render(score_str, True, "blue")
-                score_rect = score_surface.get_rect(right=right_x, top=y)
-                surface.blit(score_surface, score_rect)
+                rank_surface = self.font.render(f"{i + 1}.", True,
+                                                colors["lose"])
+                surface.blit(rank_surface,
+                             rank_surface.get_rect(left=left_x, top=y))
+                name_surface = self.font.render(str(e["name"]), True,
+                                                colors["text"])
+                surface.blit(name_surface,
+                             name_surface.get_rect(left=name_x, top=y))
+                score_surface = self.font.render(str(e["score"]), True,
+                                                 colors["title"])
+                surface.blit(score_surface,
+                             score_surface.get_rect(right=right_x, top=y))
         self.back_btn.render(surface)

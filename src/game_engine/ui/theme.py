@@ -1,6 +1,6 @@
 """Per-mode visual theming (scene background colours)."""
 
-IRONMAN_BG = (50, 0, 0)
+from ..config import get_ui_cfg
 
 
 def background(mode: str,
@@ -8,6 +8,8 @@ def background(mode: str,
     """Return the scene background colour for the active mode.
 
     Original mode keeps each scene's own colour; Ironman overrides every
-    scene with a single pronounced purple.
+    scene with a single pronounced colour.
     """
-    return IRONMAN_BG if mode == "ironman" else default
+    if mode == "ironman":
+        return get_ui_cfg()["ironman_bg"]
+    return default

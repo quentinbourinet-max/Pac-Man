@@ -1,11 +1,7 @@
 """Hand-rolled widgets (no ext menu library) so the display is fully ours."""
 
 import pygame
-
-IDLE_COLOR = (40, 40, 40)
-HOVER_COLOR = (70, 70, 90)
-BORDER_COLOR = (255, 215, 0)
-TEXT_COLOR = (255, 255, 255)
+from ..config import get_ui_cfg
 
 
 # @jferone NOTE: Same logic extracted from "pygame-menu" module by @ppizarror.
@@ -32,11 +28,13 @@ class Button:
 
     def render(self, surface: pygame.Surface) -> None:
         """Draw the button (hover-highlighted) with its centered label."""
-        color = HOVER_COLOR if self.hovered else IDLE_COLOR
+        colors = get_ui_cfg()
+        color = colors["button_hover"] if self.hovered \
+            else colors["button_idle"]
         pygame.draw.rect(surface, color, self.rect, border_radius=6)
-        pygame.draw.rect(surface, BORDER_COLOR, self.rect, width=2,
+        pygame.draw.rect(surface, colors["button_border"], self.rect, width=2,
                          border_radius=6)
-        text = self.font.render(self.label, True, TEXT_COLOR)
+        text = self.font.render(self.label, True, colors["text"])
         surface.blit(text, text.get_rect(center=self.rect.center))
 
 
@@ -80,11 +78,13 @@ class TextInput:
 
     def render(self, surface: pygame.Surface) -> None:
         """Draw the field box and the current text with a caret."""
-        pygame.draw.rect(surface, IDLE_COLOR, self.rect, border_radius=6)
-        pygame.draw.rect(surface, BORDER_COLOR, self.rect, width=2,
+        colors = get_ui_cfg()
+        pygame.draw.rect(surface, colors["button_idle"], self.rect,
+                         border_radius=6)
+        pygame.draw.rect(surface, colors["button_border"], self.rect, width=2,
                          border_radius=6)
         if self.font is None:
             return
-        text = self.font.render(self._value + "_", True, TEXT_COLOR)
+        text = self.font.render(self._value + "_", True, colors["text"])
         surface.blit(text, text.get_rect(
             midleft=(self.rect.left + 8, self.rect.centery)))

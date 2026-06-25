@@ -114,9 +114,9 @@ class LevelTools:
                         if (nc, nr) in chosen:
                             continue
                         if (nc, nr) != (cx, cy) and self.is_open_cell(nc, nr):
-                            candidates.append((nc, nr))
+                            candidates.append((nc, nr))  # type: ignore
                 if candidates:
-                    chosen.add(rng.choice(candidates))
+                    chosen.add(rng.choice(candidates))  # type: ignore
                     break
         return chosen
 

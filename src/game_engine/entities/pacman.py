@@ -1,12 +1,8 @@
 """Pac-Man entity: player position, buffered movement and animation."""
 
-from pathlib import Path
 import pygame
 from game_engine.tools.level_tools import LevelTools
-
-PACMAN_COLOR = (255, 255, 0)
-ROOT_DIR = Path(__file__).resolve().parent.parent.parent.parent
-SPRITES_DIR = ROOT_DIR / "tools" / "visualisation_tools" / "pac-man_sprites"
+from game_engine.config import get_ui_cfg, Paths
 
 
 class Pacman:
@@ -34,11 +30,11 @@ class Pacman:
     def load_sprites(self) -> None:
         """Load the Pac-Man sprite frames used for animation."""
         try:
-            img1 = pygame.image.load(str(SPRITES_DIR /
+            img1 = pygame.image.load(str(Paths.SPRITES /
                                          "1.png")).convert_alpha()
-            img2 = pygame.image.load(str(SPRITES_DIR /
+            img2 = pygame.image.load(str(Paths.SPRITES /
                                          "2.png")).convert_alpha()
-            img3 = pygame.image.load(str(SPRITES_DIR /
+            img3 = pygame.image.load(str(Paths.SPRITES /
                                          "3.png")).convert_alpha()
             self.frames = [img1, img2, img3, img2]
         except FileNotFoundError:
@@ -124,7 +120,7 @@ class Pacman:
             surface.blit(transformed_image, rect)
 
         else:
-            pygame.draw.circle(surface, PACMAN_COLOR,
+            pygame.draw.circle(surface, get_ui_cfg()["pacman"],
                                (int(screen_x + tile_size // 2),
                                 int(screen_y + tile_size // 2)),
                                tile_size // 2)

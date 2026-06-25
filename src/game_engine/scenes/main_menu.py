@@ -2,11 +2,10 @@
 
 import pygame
 from typing import TYPE_CHECKING
-from pathlib import Path
 from ..definitions import QUIT, Scene
 from ..ui.components import Button
 from ..ui.theme import background
-from ..config import get_cfg
+from ..config import get_cfg, get_ui_cfg, Paths
 
 if TYPE_CHECKING:
     from ..core import Game
@@ -25,13 +24,6 @@ def _available_modes() -> list[str]:
         return ["original"]
 
 
-ROOT_DIR = Path(__file__).resolve().parent.parent.parent.parent
-FONT_PATH = ROOT_DIR / "tools" / "visualisation_tools" / "Minecraftia.ttf"
-
-BG_COLOR = (10, 10, 30)
-TITLE_COLOR = (255, 215, 0)
-
-
 class MainMenu(Scene):
     """Landing screen. Buttons request transitions to other scenes."""
 
@@ -42,10 +34,6 @@ class MainMenu(Scene):
         self.modes = _available_modes()
         if game.mode not in self.modes:
             game.mode = self.modes[0]
-        try:
-            self.font_path: str | None = str(FONT_PATH)
-        except Exception:
-            self.font_path = None
         self.build_ui()
 
     def _mode_label(self) -> str:
@@ -57,10 +45,10 @@ class MainMenu(Scene):
         title_size = max(32, self.game.height // 10)
         font_size = max(16, self.game.height // 25)
         try:
-            self.title_font = pygame.font.Font(self.font_path, title_size)
-            font = pygame.font.Font(self.font_path, font_size)
+            self.title_font = pygame.font.Font(str(Paths.FONT), title_size)
+            font = pygame.font.Font(str(Paths.FONT), font_size)
         except (FileNotFoundError, pygame.error):
-            print(f" /!\\ Font not found at {FONT_PATH}. Using default.")
+            print(f" /!\\ Font not found at {Paths.FONT}. Using default.")
             self.title_font = pygame.font.SysFont("monospace",
                                                   title_size, bold=True)
             font = pygame.font.SysFont("monospace", font_size)
@@ -119,11 +107,11 @@ class MainMenu(Scene):
 
     def render(self, surface: pygame.Surface) -> None:
         """Draw the title and the menu buttons."""
-        surface.fill(background(self.game.mode, BG_COLOR))
-        title = self.title_font.render("PAC-MAN", True, TITLE_COLOR)
+        colors = get_ui_cfg()
+        surface.fill(background(self.game.mode, colors["bg"]))
+        title = self.title_font.render("PAC-MAN", True, colors["title"])
         title_y = max(50, self.game.height // 5)
         surface.blit(title,
-                     title.get_rect(center=(self.game.width // 2,
-                                            title_y)))
+                     title.get_rect(center=(self.game.width // 2, title_y)))
         for btn, _ in self.buttons:
             btn.render(surface)

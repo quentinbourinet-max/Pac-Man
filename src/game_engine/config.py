@@ -7,82 +7,51 @@ built-in default with a logged warning, so the config can be edited (even at
 peer-review defense) without ever crashing the game (M3, A5).
 """
 
+import re
 import sys
-from json import loads, JSONDecodeError
+from json import loads, dumps, JSONDecodeError
 from typing import Any
 from pathlib import Path
+from .tools.models import FALLBACK_CONFIG as _FALLBACK_CONFIG
 
-ROOT = Path(__file__).resolve().parent.parent.parent
-_CONFIG_PATH = ROOT / "data" / "config.json"
 
-_FALLBACK_CONFIG: dict[str, Any] = {
-    "window": {
-              "title": "Pac-Man",
-              "width": 800,
-              "height": 600,
-              "fps": 60
-              },
-    "levels": {
-               "width": 20,
-               "height": 20,
-               "dims": [[20, 20], [21, 21], [22, 22], [23, 23], [24, 24],
-                        [25, 25], [26, 26], [27, 27], [28, 28], [29, 29]],
-               "seed": 42
-               },
-    "game": {
-        "common": {
-                  "speed_multiplier": 1.0,
-                  "ghost_speed": 3.0,
-                  "ghost_frightened_speed": 2.0,
-                  "ghost_dead_speed_mult": 2.0,
-                  "pacman_speed": 4.0,
-                  "collision_radius_ratio": 0.7,
-                  "points_per_gum": 10,
-                  "points_per_power_gum": 50,
-                  "points_1st_ghost": 200
-                  },
-        "original": {
-                    "lives": 3,
-                    "level_max_time": 300,
-                    "frightened_duration": 6.0,
-                    "highscore_filename": "highscores.json",
-                    "scatter_durations": [7, 7, 5, 5],
-                    "chase_durations": [20, 20, 20, 999]
-                    },
-        "ironman": {
-                   "speed_multiplier": 1.3,
-                   "lives": 1,
-                   "level_max_time": 180,
-                   "frightened_duration": 5.0,
-                   "highscore_filename": "highscores_ironman.json",
-                   "scatter_durations": [7, 7, 5, 5],
-                   "chase_durations": [30, 30, 30, 999]
-                   }
-        }
-}
+class Paths(Path):
+    """Single Source of Thruth path redirections using ``Path`` class"""
+    ROOT = Path(__file__).resolve().parent.parent.parent
+    CONFIG = ROOT / "data" / "config.json"
 
-_WINDOW_SCHEMA: dict[str, tuple[Any, ...]] = {
-    "title": ("str",),
-    "width": ("int", 100, 10000),
-    "height": ("int", 100, 10000),
-    "fps": ("int", 1, 1000),
-}
-_COMMON_SCHEMA: dict[str, tuple[Any, ...]] = {
-    "speed_multiplier": ("float", 0.1, 100.0),
-    "ghost_speed": ("float", 0.1, 1000.0),
-    "ghost_frightened_speed": ("float", 0.1, 1000.0),
-    "ghost_dead_speed_mult": ("float", 1.0, 1000.0),
-    "pacman_speed": ("float", 0.1, 1000.0),
-    "collision_radius_ratio": ("float", 0.01, 5.0),
-}
-_MODE_SCHEMA: dict[str, tuple[Any, ...]] = {
-    "lives": ("int", 1, 999),
-    "level_max_time": ("float", 1.0, 1.0e6),
-    "frightened_duration": ("float", 0.0, 1.0e6),
-    "highscore_filename": ("str",),
-    "scatter_durations": ("list_num",),
-    "chase_durations": ("list_num",),
-}
+    ASSETS = ROOT / "data" / "assets"
+    FONT   = ASSETS / "fonts"   / "Minecraftia.ttf"
+    SPRITES = ASSETS / "sprites"
+    MUSIC   = ASSETS / "music"  / "background_music.mp3"
+    SOUND_GUM   = ASSETS / "sfx" / "eat_gum.mp3"
+    SOUND_GHOST = ASSETS / "sfx" / "eat_ghost.mp3"
+    SOUND_LOST  = ASSETS / "sfx" / "life_lost.mp3"
+
+
+class Schemas:
+
+    WINDOW: dict[str, tuple[Any, ...]] = {
+        "title":  ("str",),
+        "width":  ("int", 100, 10000),
+        "height": ("int", 100, 10000),
+        "fps":    ("int", 1, 1000)}
+
+    COMMON: dict[str, tuple[Any, ...]] = {
+        "speed_multiplier":       ("float", 0.1, 100.0),
+        "ghost_speed":            ("float", 0.1, 1000.0),
+        "ghost_frightened_speed": ("float", 0.1, 1000.0),
+        "ghost_dead_speed_mult":  ("float", 1.0, 1000.0),
+        "pacman_speed":           ("float", 0.1, 1000.0),
+        "collision_radius_ratio": ("float", 0.01, 5.0)}
+
+    MODE: dict[str, tuple[Any, ...]] = {
+        "lives":               ("int", 1, 999),
+        "level_max_time":      ("float", 1.0, 1.0e6),
+        "frightened_duration": ("float", 0.0, 1.0e6),
+
+        "scatter_durations":   ("list_num",),
+        "chase_durations":     ("list_num",)}
 
 
 class _ConfigStore:
@@ -100,6 +69,10 @@ class _ConfigStore:
     def set_path(self, path: Path) -> None:
         """Point to a new config file and drop the cached parse."""
         self._path = path
+        self._cache = None
+
+    def invalidate(self) -> None:
+        """Drop the cached parse (call after any write to the config file)."""
         self._cache = None
 
     def data(self) -> dict[str, Any]:
@@ -123,7 +96,7 @@ class _ConfigStore:
             return dict(_FALLBACK_CONFIG)
 
 
-_CONFIG = _ConfigStore(_CONFIG_PATH)
+_CONFIG = _ConfigStore(Paths.CONFIG)
 
 
 def set_config_path(path: Path) -> None:
@@ -205,6 +178,11 @@ def _validate_value(key: str, value: Any, default: Any,
                     for x in value):
             return value
 
+    elif kind == "color":
+        if (isinstance(value, list) and len(value) == 3
+                and all(isinstance(v, int) and 0 <= v <= 255 for v in value)):
+            return tuple(value)
+
     else:  # numeric
         if not isinstance(value, bool):
             try:
@@ -254,12 +232,9 @@ def get_window_cfg() -> dict[str, Any]:
         raw = {}
     defaults = _FALLBACK_CONFIG["window"]
     out: dict[str, Any] = dict(defaults)
-    for key, spec in _WINDOW_SCHEMA.items():
-        out[key] = _validate_value(
-                                  key,
-                                  raw.get(key, defaults[key]),
-                                  defaults[key], spec
-                                  )
+    for key, spec in Schemas.WINDOW.items():
+        out[key] = _validate_value(key, raw.get(key, defaults[key]),
+                                   defaults[key], spec)
     return out
 
 
@@ -282,27 +257,69 @@ def get_gamemode_cfg(mode: str = "original") -> dict[str, Any]:
     validated: dict[str, Any] = {}
     for key, val in merged.items():
         default = defaults.get(key)
-        if key in _COMMON_SCHEMA:
-            spec: tuple[Any, ...] = _COMMON_SCHEMA[key]
-        elif key in _MODE_SCHEMA:
-            spec = _MODE_SCHEMA[key]
+        if key in Schemas.COMMON:
+            spec: tuple[Any, ...] = Schemas.COMMON[key]
+        elif key in Schemas.MODE:
+            spec = Schemas.MODE[key]
         elif key.startswith("points_"):
             spec = ("int", 0, None)
             default = default if default is not None else 0
         else:
-            validated[key] = val  # unknown key: ignore validation, keep value
+            validated[key] = val
             continue
         validated[key] = _validate_value(key, val, default, spec)
     return validated
 
 
-def get_highscore_path(mode: str = "original") -> Path:
-    """Return the highscore JSON file path for the given mode."""
-    filename = str(get_gamemode_cfg(mode).get(
-                                             "highscore_filename",
-                                             "highscores.json"
-                                             ))
-    return ROOT / "data" / filename
+def _compact_num_arrays(json_str: str) -> str:
+    """Re-collapse multi-line arrays of numbers into a single line.
+
+    json.dumps(indent=N) expands every array; this restores the compact form
+    for arrays that contain only numbers (colors, durations, dims pairs…).
+    """
+    def _join(m: re.Match) -> str:
+        nums = re.findall(r"[-\d.]+", m.group(0))
+        return "[" + ", ".join(nums) + "]"
+    return re.sub(r"\[\n(?:\s+[-\d.]+,?\n)+\s*\]", _join, json_str)
+
+
+def get_scores(mode: str = "original") -> list[dict[str, Any]]:
+    """Return the sorted Top-10 score entries for the given mode."""
+    entries = get_cfg().get("scores", {}).get(mode, [])
+    if not isinstance(entries, list):
+        return []
+    return sorted(entries, key=lambda e: e.get("score", 0), reverse=True)[:10]
+
+
+def save_score(mode: str, name: str, score: int) -> None:
+    """Append a score entry to config.json and persist it to disk.
+
+    The first write strips any hand-written comments from config.json —
+    subsequent writes preserve the machine-formatted JSON.
+    """
+    path = Paths.CONFIG
+    try:
+        raw = path.read_text(encoding="utf-8")
+        data: dict[str, Any] = loads(_strip_comments(raw))
+        if not isinstance(data, dict):
+            data = {}
+    except (OSError, JSONDecodeError, ValueError):
+        data = {}
+
+    scores = data.setdefault("scores", {})
+    entries: list[dict[str, Any]] = scores.get(mode, [])
+    if not isinstance(entries, list):
+        entries = []
+    entries.append({"name": name[:10], "score": max(0, int(score))})
+    entries.sort(key=lambda e: e.get("score", 0), reverse=True)
+    scores[mode] = entries[:10]
+
+    try:
+        path.write_text(_compact_num_arrays(dumps(data, indent=4,
+                                                      ensure_ascii=False)))
+        _CONFIG.invalidate()
+    except OSError as exc:
+        print(f"> Score save failed: {exc}", file=sys.stderr)
 
 
 def get_levels_cfg() -> dict[str, Any]:
@@ -327,35 +344,19 @@ def get_level_dims(level: int = 1) -> tuple[int, int]:
     """
     limits: tuple[Any, ...] = ("int", 5, 200)
     levels = get_levels_cfg()
-    width = _validate_value(
-                           "levels.width",
-                           levels.get("width", 20),
-                           20,
-                           limits
-                           )
-    height = _validate_value(
-                            "levels.height",
-                            levels.get("height", 20),
-                            20,
-                            limits
-                            )
+    width = _validate_value("levels.width", levels.get("width", 20), 20,
+                            limits)
+    height = _validate_value("levels.height", levels.get("height", 20), 20,
+                             limits)
     dims = levels.get("dims")
 
     if isinstance(dims, list) and 1 <= level <= len(dims):
         entry: list[int] = dims[level - 1]
         if isinstance(entry, (list, tuple)) and len(entry) == 2:
-            width = _validate_value(
-                                   f"levels.dims[{level}].w",
-                                   entry[0],
-                                   width,
-                                   limits
-                                   )
-            height = _validate_value(
-                                    f"levels.dims[{level}].h",
-                                    entry[1],
-                                    height,
-                                    limits
-                                    )
+            width = _validate_value(f"levels.dims[{level}].w", entry[0],
+                                    width, limits)
+            height = _validate_value(f"levels.dims[{level}].h", entry[1],
+                                     height, limits)
     return width, height
 
 
@@ -372,3 +373,28 @@ def get_level_seed(level: int) -> int | None:
         return int(get_levels_cfg().get("seed", 42))
     except (TypeError, ValueError):
         return 42
+
+
+def get_ui_cfg() -> dict[str, Any]:
+    """Return UI colors, validated; each value is a (R, G, B) tuple."""
+    defaults = _FALLBACK_CONFIG["ui"]["colors"]
+    raw = get_cfg().get("ui", {}).get("colors", {})
+    if not isinstance(raw, dict):
+        raw = {}
+    result: dict[str, Any] = {k: tuple(v) for k, v in defaults.items()}
+    for key, val in raw.items():
+        if key not in defaults:
+            continue
+        result[key] = _validate_value(f"ui.colors.{key}", val,
+                                      tuple(defaults[key]), ("color",))
+    return result
+
+
+def get_app_cfg() -> dict[str, Any]:
+    """Return app metadata (version, default_player_name)."""
+    defaults = _FALLBACK_CONFIG["app"]
+    raw = get_cfg().get("app", {})
+    if not isinstance(raw, dict):
+        return dict(defaults)
+    return {**defaults, **{k: v for k, v in raw.items() if k in defaults
+                           and isinstance(v, str)}}
