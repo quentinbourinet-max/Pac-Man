@@ -11,6 +11,7 @@ from .scenes.pause_menu import PauseMenu
 from .scenes.instructions_menu import InstructionsMenu
 from .scenes.scores_menu import ScoresMenu
 from .scenes.end_screen import EndScreen
+from .config import ensure_highscores_initialized
 
 PROGRAM = "Pac-Man"
 VERSION = "1.0.0"
@@ -21,6 +22,7 @@ class Game:
 
     def __init__(self) -> None:
         cfg = get_window_cfg()
+        ensure_highscores_initialized()
         self.width = int(cfg["width"])
         self.height = int(cfg["height"])
         self.fps = int(cfg["fps"])

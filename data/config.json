@@ -5,15 +5,23 @@
         "height": 860,
         "fps": 60
     },
-
     "levels": {
         "width": 20,
         "height": 20,
-        "dims": [[10, 10], [10, 15], [18, 14], [21, 21], [24, 24],
-                 [25, 25], [26, 26], [27, 27], [28, 28], [30, 30]],
+        "dims": [
+            [10, 10],
+            [10, 15],
+            [18, 14],
+            [21, 21],
+            [24, 24],
+            [25, 25],
+            [26, 26],
+            [27, 27],
+            [28, 28],
+            [30, 30]
+        ],
         "seed": 42
     },
-
     "game": {
         "common": {
             "speed_multiplier": 1.0,
@@ -30,7 +38,6 @@
             "lives": 3,
             "level_max_time": 300,
             "frightened_duration": 6.0,
-            "highscore_filename": "highscores.json",
             "scatter_durations": [7, 7, 5, 5],
             "chase_durations": [20, 20, 20, 999]
         },
@@ -39,13 +46,79 @@
             "lives": 1,
             "level_max_time": 180,
             "frightened_duration": 5.0,
-            "highscore_filename": "highscores_ironman.json",
             "scatter_durations": [7, 7, 5, 5],
             "chase_durations": [30, 30, 30, 999]
         }
     },
-
-	"menu": {
-		
-	}
+    "app": {
+        "version": "1.0.0",
+        "default_player_name": "PLAYER"
+    },
+    "ui": {
+        "colors": {
+            "bg": [10, 10, 30],
+            "bg_instructions": [30, 10, 10],
+            "bg_game": [0, 0, 0],
+            "title": [255, 215, 0],
+            "text": [255, 255, 255],
+            "hint": [150, 150, 150],
+            "header": [255, 203, 71],
+            "wall": [33, 33, 255],
+            "pacman": [255, 255, 0],
+            "pac_gum": [255, 255, 255],
+            "ghost_frightened": [50, 150, 255],
+            "win": [255, 215, 0],
+            "lose": [220, 60, 60],
+            "ironman_bg": [50, 0, 0],
+            "button_idle": [40, 40, 40],
+            "button_hover": [70, 70, 90],
+            "button_border": [255, 215, 0]
+        }
+    },
+    "scores": {
+        "original": [
+            {
+                "name": "SAYCA",
+                "score": 2620
+            },
+            {
+                "name": "CAPYBARA",
+                "score": 1360
+            },
+            {
+                "name": "Pac, The Man",
+                "score": 1120
+            },
+            {
+                "name": "PLAYER",
+                "score": 0
+            }
+        ],
+        "ironman": [
+            {
+                "name": "Doom Guy",
+                "score": 66600
+            },
+            {
+                "name": "Man, The Pac",
+                "score": 1120
+            },
+            {
+                "name": "SAYCA",
+                "score": 480
+            },
+            {
+                "name": "kmglkefg",
+                "score": 230
+            },
+            {
+                "name": "tete",
+                "score": 100
+            },
+            {
+                "name": "PLAYER",
+                "score": 0
+            }
+        ]
+    }
 }

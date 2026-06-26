@@ -1,32 +1,16 @@
 """In-game playing level scene."""
 
 import pygame
-from pathlib import Path
 from typing import TYPE_CHECKING
 from game_engine.tools.level_tools import LevelTools
 from game_engine.entities.ghost import Ghost
 from game_engine.entities.pacman import Pacman
 from ..definitions import Scene
 from ..ui.theme import background
-from ..config import get_gamemode_cfg
+from ..config import get_gamemode_cfg, get_ui_cfg, Paths
 
 if TYPE_CHECKING:
     from ..core import Game
-
-BG_COLOR = (0, 0, 0)
-WALL_COLOR = (33, 33, 255)
-TEXT_COLOR = (255, 255, 255)
-PAC_GUM_COLOR = (255, 255, 255)
-PACMAN_COLOR = (255, 255, 0)
-FRIGHTENED_COLOR = (50, 150, 255)
-ROOT_DIR = Path(__file__).resolve().parent.parent.parent.parent
-FONT_PATH = ROOT_DIR / "tools" / "visualisation_tools" / "Minecraftia.ttf"
-SPRITES_DIR = ROOT_DIR / "tools" / "visualisation_tools" / "pac-man_sprites"
-MUSIC_PATH = ROOT_DIR / "tools" / "visualisation_tools" \
-    / "background_music.mp3"
-SOUND_GUM_PATH = ROOT_DIR / "tools" / "visualisation_tools" / "eat_gum.mp3"
-SOUND_GHOST_PATH = ROOT_DIR / "tools" / "visualisation_tools" / "eat_ghost.mp3"
-SOUND_LOST_PATH = ROOT_DIR / "tools" / "visualisation_tools" / "life_lost.mp3"
 
 
 class PlayingLevel(Scene):
@@ -36,9 +20,9 @@ class PlayingLevel(Scene):
         super().__init__(game)
         self.cfg = get_gamemode_cfg(game.mode)
         try:
-            self.level_font = pygame.font.Font(str(FONT_PATH), 18)
+            self.level_font = pygame.font.Font(str(Paths.FONT), 18)
         except FileNotFoundError:
-            print(f" /!\\ Font not found at {FONT_PATH}."
+            print(f" /!\\ Font not found at {Paths.FONT}."
                   " Falling back to the default font.")
             self.level_font = pygame.font.SysFont("monospace", 18)
         self.level_id = 1
@@ -85,9 +69,9 @@ class PlayingLevel(Scene):
         self.eat_ghost_sound: pygame.mixer.Sound | None = None
         self.lost_life_sound: pygame.mixer.Sound | None = None
         try:
-            self.eat_gum_sound = pygame.mixer.Sound(str(SOUND_GUM_PATH))
-            self.eat_ghost_sound = pygame.mixer.Sound(str(SOUND_GHOST_PATH))
-            self.lost_life_sound = pygame.mixer.Sound(str(SOUND_LOST_PATH))
+            self.eat_gum_sound = pygame.mixer.Sound(str(Paths.SOUND_GUM))
+            self.eat_ghost_sound = pygame.mixer.Sound(str(Paths.SOUND_GHOST))
+            self.lost_life_sound = pygame.mixer.Sound(str(Paths.SOUND_LOST))
             self.eat_gum_sound.set_volume(0.5)
             self.eat_ghost_sound.set_volume(0.7)
             self.lost_life_sound.set_volume(0.6)
@@ -103,11 +87,11 @@ class PlayingLevel(Scene):
     def play_bg_music(self) -> None:
         """Load and start the background music, looping from the beginning."""
         try:
-            pygame.mixer.music.load(str(MUSIC_PATH))
+            pygame.mixer.music.load(str(Paths.MUSIC))
             pygame.mixer.music.play(-1)
         except pygame.error:
             print(" /!\\ Could not load the music "
-                  f"at: {MUSIC_PATH}")
+                  f"at: {Paths.MUSIC}")
 
     def _corner_spawns(self) -> list[list[int]]:
         """The four maze corners for the current grid, as [col, row].
@@ -334,19 +318,21 @@ class PlayingLevel(Scene):
 
     def render(self, surface: pygame.Surface) -> None:
         """Draw the HUD, maze, items, ghosts, Pac-Man and any overlays."""
-        surface.fill(background(self.game.mode, BG_COLOR))
+        colors = get_ui_cfg()
+        surface.fill(background(self.game.mode, colors["bg_game"]))
         text_surface = self.level_font.render(f"STAGE  {self.level_id}",
-                                              True, TEXT_COLOR)
+                                              True, colors["text"])
         text_rect = text_surface.get_rect(center=(self.game.width // 2, 12))
         surface.blit(text_surface, text_rect)
         score_text = self.level_font.render(f"SCORE: {self.score}",
-                                            True, TEXT_COLOR)
+                                            True, colors["text"])
         surface.blit(score_text, (20, 12))
         minutes = int(self.remaining_time) // 60
         seconds = int(self.remaining_time) % 60
-        color = (255, 0, 0) if self.remaining_time < 30 else TEXT_COLOR
+        time_color = colors["lose"] if self.remaining_time < 30 \
+            else colors["text"]
         time_text = self.level_font.render(f"TIME: {minutes:02d}:"
-                                           f"{seconds:02d}", True, color)
+                                           f"{seconds:02d}", True, time_color)
         surface.blit(time_text,
                      (self.game.width - time_text.get_width() - 20, 12))
         if self.invincible:
@@ -355,7 +341,7 @@ class PlayingLevel(Scene):
             cheat_rect = cheat_text.get_rect(
                 center=(self.game.width // 2, self.game.height - 27))
             surface.blit(cheat_text, cheat_rect)
-        lives_text = self.level_font.render("LIVES:", True, TEXT_COLOR)
+        lives_text = self.level_font.render("LIVES:", True, colors["text"])
         surface.blit(lives_text, (20, self.game.height - 35))
         if self.pacman.frames:
             life_icon = pygame.transform.scale(self.pacman.frames[2], (16, 16))
@@ -363,7 +349,7 @@ class PlayingLevel(Scene):
                 surface.blit(life_icon, (80 + i * 20, self.game.height - 35))
         else:
             for i in range(self.lives):
-                pygame.draw.circle(surface, PACMAN_COLOR,
+                pygame.draw.circle(surface, colors["pacman"],
                                    (90 + i * 20, self.game.height - 27), 8)
         if not self.tools.grid:
             return
@@ -380,21 +366,21 @@ class PlayingLevel(Scene):
                 x = offset_x + c * tile_size
                 y = offset_y + r * tile_size
                 if val == 15:
-                    pygame.draw.rect(surface, ("red"),
+                    pygame.draw.rect(surface, colors["lose"],
                                      (x, y, tile_size, tile_size))
                 if val & 1:
-                    pygame.draw.line(surface, WALL_COLOR, (x, y),
+                    pygame.draw.line(surface, colors["wall"], (x, y),
                                      (x + tile_size, y), 2)
                 if val & 2:
-                    pygame.draw.line(surface, WALL_COLOR,
+                    pygame.draw.line(surface, colors["wall"],
                                      (x + tile_size, y),
                                      (x + tile_size, y + tile_size), 2)
                 if val & 4:
-                    pygame.draw.line(surface, WALL_COLOR,
+                    pygame.draw.line(surface, colors["wall"],
                                      (x, y + tile_size),
                                      (x + tile_size, y + tile_size), 2)
                 if val & 8:
-                    pygame.draw.line(surface, WALL_COLOR,
+                    pygame.draw.line(surface, colors["wall"],
                                      (x, y), (x, y + tile_size), 2)
         for r, row in enumerate(self.item_grid):
             for c, item in enumerate(row):
@@ -405,11 +391,11 @@ class PlayingLevel(Scene):
                 center_x = x + tile_size // 2
                 center_y = y + tile_size // 2
                 if item == 1:
-                    pygame.draw.circle(surface, PAC_GUM_COLOR,
+                    pygame.draw.circle(surface, colors["pac_gum"],
                                        (center_x, center_y),
                                        max(1, tile_size // 10))
                 elif item == 2:
-                    pygame.draw.circle(surface, PAC_GUM_COLOR,
+                    pygame.draw.circle(surface, colors["pac_gum"],
                                        (center_x, center_y),
                                        max(2, tile_size // 5))
         for ghost in self.ghosts:

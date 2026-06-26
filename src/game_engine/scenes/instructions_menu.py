@@ -1,22 +1,14 @@
 """How-to-play screen: controls, configuration and credits."""
 
-from pathlib import Path
 from typing import TYPE_CHECKING
 import pygame
 from ..definitions import Scene
 from ..ui.theme import background
 from ..ui.components import Button
+from ..config import get_ui_cfg, Paths
+
 if TYPE_CHECKING:
     from ..core import Game
-
-ROOT_DIR = Path(__file__).resolve().parent.parent.parent.parent
-FONT_PATH = ROOT_DIR / "tools" / "visualisation_tools" / "Minecraftia.ttf"
-
-BG_COLOR = (30, 10, 10)
-TITLE_COLOR = (255, 215, 0)
-HEADER_COLOR = (255, 203, 71)
-TEXT_COLOR = (235, 235, 235)
-HINT_COLOR = (150, 150, 150)
 
 # Each section is a header plus its body lines, rendered centered.
 SECTIONS = [
@@ -58,7 +50,7 @@ class InstructionsMenu(Scene):
     def _load_font(self, size: int, bold: bool = False) -> pygame.font.Font:
         """Load the pixel font at a size, falling back to a system font."""
         try:
-            return pygame.font.Font(str(FONT_PATH), size)
+            return pygame.font.Font(str(Paths.FONT), size)
         except (FileNotFoundError, pygame.error):
             return pygame.font.SysFont("monospace", size, bold=bold)
 
@@ -70,10 +62,10 @@ class InstructionsMenu(Scene):
         hint_size = max(10, self.game.height // 50)
 
         try:
-            self.title_font = pygame.font.Font(str(FONT_PATH), title_size)
-            self.header_font = pygame.font.Font(str(FONT_PATH), header_size)
-            self.body_font = pygame.font.Font(str(FONT_PATH), body_size)
-            self.hint_font = pygame.font.Font(str(FONT_PATH), hint_size)
+            self.title_font = pygame.font.Font(str(Paths.FONT), title_size)
+            self.header_font = pygame.font.Font(str(Paths.FONT), header_size)
+            self.body_font = pygame.font.Font(str(Paths.FONT), body_size)
+            self.hint_font = pygame.font.Font(str(Paths.FONT), hint_size)
         except (FileNotFoundError, pygame.error):
             self.title_font = pygame.font.SysFont("monospace", title_size,
                                                   bold=True)
@@ -109,11 +101,12 @@ class InstructionsMenu(Scene):
 
     def render(self, surface: pygame.Surface) -> None:
         """Draw the controls / cheats / configuration / credits sections."""
-        surface.fill(background(self.game.mode, BG_COLOR))
+        colors = get_ui_cfg()
+        surface.fill(background(self.game.mode, colors["bg_instructions"]))
         cx = self.game.width // 2
 
         title_cy = self.game.height // 10
-        title = self.title_font.render("HOW TO PLAY", True, TITLE_COLOR)
+        title = self.title_font.render("HOW TO PLAY", True, colors["title"])
         surface.blit(title, title.get_rect(center=(cx, title_cy)))
 
         header_h = self.header_font.get_height()
@@ -130,11 +123,11 @@ class InstructionsMenu(Scene):
 
         for header, lines in SECTIONS:
             y += gap
-            head = self.header_font.render(header, True, HEADER_COLOR)
+            head = self.header_font.render(header, True, colors["header"])
             surface.blit(head, head.get_rect(midtop=(cx, y)))
             y += header_h + head_pad
             for line in lines:
-                text = self.body_font.render(line, True, TEXT_COLOR)
+                text = self.body_font.render(line, True, colors["text"])
                 surface.blit(text, text.get_rect(midtop=(cx, y)))
                 y += body_step
         self.back_btn.render(surface)

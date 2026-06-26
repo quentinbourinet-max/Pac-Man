@@ -1,16 +1,13 @@
 """Pause menu scene drawn over a frozen snapshot of the play scene."""
 
 import pygame
-from pathlib import Path
 from typing import TYPE_CHECKING
 from ..definitions import Scene
 from ..ui.components import Button
+from ..config import get_ui_cfg, Paths
 
 if TYPE_CHECKING:
     from ..core import Game
-
-ROOT_DIR = Path(__file__).resolve().parent.parent.parent.parent
-FONT_PATH = ROOT_DIR / "tools" / "visualisation_tools" / "Minecraftia.ttf"
 
 
 class PauseMenu(Scene):
@@ -27,8 +24,8 @@ class PauseMenu(Scene):
         font_size = max(14, self.game.height // 25)
 
         try:
-            self.title_font = pygame.font.Font(str(FONT_PATH), title_size)
-            font = pygame.font.Font(str(FONT_PATH), font_size)
+            self.title_font = pygame.font.Font(str(Paths.FONT), title_size)
+            font = pygame.font.Font(str(Paths.FONT), font_size)
         except (FileNotFoundError, pygame.error):
             self.title_font = pygame.font.SysFont("monospace", title_size,
                                                   bold=True)
@@ -62,12 +59,13 @@ class PauseMenu(Scene):
 
     def render(self, surface: pygame.Surface) -> None:
         """Draw the frozen snapshot dimmed, then the pause buttons."""
+        colors = get_ui_cfg()
         surface.blit(self.background_surface, (0, 0))
         overlay = pygame.Surface((self.game.width, self.game.height))
         overlay.set_alpha(150)
         overlay.fill((0, 0, 0))
         surface.blit(overlay, (0, 0))
-        title = self.title_font.render("PAUSE", True, (255, 215, 0))
+        title = self.title_font.render("PAUSE", True, colors["title"])
         surface.blit(title, title.get_rect(center=(self.game.width // 2,
                                                    self.game.height // 4)))
         self.btn_resume.render(surface)
