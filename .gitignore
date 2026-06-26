@@ -6,3 +6,8 @@ __pycache__/
 .venv/
 .vscode/
 *.code-workspace
+
+# Build artifacts
+dist/
+build/
+*.spec

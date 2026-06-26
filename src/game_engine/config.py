@@ -294,7 +294,7 @@ def get_scores(mode: str = "original") -> list[dict[str, Any]]:
 def save_score(mode: str, name: str, score: int) -> None:
     """Append a score entry to config.json and persist it to disk.
 
-    The first write strips any hand-written comments from config.json —
+    The first write strips any hand-written comments from config.json -
     subsequent writes preserve the machine-formatted JSON.
     """
     path = Paths.CONFIG

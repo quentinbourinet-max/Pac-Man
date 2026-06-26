@@ -1,4 +1,4 @@
-"""Highscore persistence — thin interface over the config.json scores section."""
+"""Highscore persistence - thin interface over the config.json scores section."""
 
 from game_engine.config import get_scores, save_score
 
