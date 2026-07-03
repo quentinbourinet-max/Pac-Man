@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Mon Jeu PyScript</title>
+    <!-- Chargement de PyScript -->
+    <link rel="stylesheet" href="https://pyscript.net/releases/2024.1.1/core.css" />
+    <script type="module" src="https://pyscript.net/releases/2024.1.1/core.js"></script>
+</head>
+<body>
+    <!-- Le canvas où votre jeu s'affichera -->
+    <canvas id="game-canvas" width="1280" height="720"></canvas>
+
+    <!-- Configuration de votre script -->
+    <script type="py" config='{"packages": ["pygame"], "files": {"./main.py": "./main.py"}}'>
+        import main
+    </script>
+</body>
+</html>

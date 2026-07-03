@@ -1,23 +1,7 @@
 [project]
 name = "pac-man"
-version = "1.0.0"
-description = "Two-peers complete python game project, from 42next common core curriculum."
+version = "0.1.0"
+description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.10"
-dependencies = [
-    "pygame>=2.6",
-    # A-Maze-ing package (mazegenerator) is the externally-assigned wheel,
-    # reinstalled at peer review. Its filename varies, so it is not pinned
-    # here by path; `make install` installs ./mazegenerator-*.whl from the
-    # repo root. Import-checked via the mypy override below.
-]
-
-[project.optional-dependencies]
-dev = [
-    "pytest>=9.0",
-    "flake8>=7.0",
-]
-
-[[tool.mypy.overrides]]
-module = "mazegenerator"
-ignore_missing_imports = true
+dependencies = []
