@@ -2,9 +2,9 @@
 
 import pygame
 from typing import TYPE_CHECKING
-from game_engine.tools.level_tools import LevelTools
-from game_engine.entities.ghost import Ghost
-from game_engine.entities.pacman import Pacman
+from ...pacman_engine.tools.level_tools import LevelTools
+from ...pacman_engine.entities.ghost import Ghost
+from ...pacman_engine.entities.pacman import Pacman
 from ..definitions import Scene
 from ..ui.theme import background
 

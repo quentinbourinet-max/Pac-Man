@@ -3,8 +3,8 @@
 from typing import List, Dict
 import pygame
 from pathlib import Path
-from game_engine.tools.level_tools import LevelTools
-from game_engine.tools.ghost_ai import GhostAI
+from ...pacman_engine.tools.level_tools import LevelTools
+from ...pacman_engine.tools.ghost_ai import GhostAI
 from ..tools.parser import ConfigParser
 
 

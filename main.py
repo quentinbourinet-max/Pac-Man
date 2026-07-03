@@ -1,6 +1,7 @@
-def main():
-    print("Hello from pac-man!")
+import asyncio
+import src.__main__ # Votre code actuel
 
+async def main():
+    await src.__main__.main() # Votre fonction principale qui contient la boucle while
 
-if __name__ == "__main__":
-    main()
+asyncio.run(main())

@@ -1,6 +1,6 @@
 """Ghost pathfinding helpers: BFS chase, flee and random moves."""
 
-from game_engine.tools.level_tools import LevelTools
+from ...pacman_engine.tools.level_tools import LevelTools
 import random
 
 

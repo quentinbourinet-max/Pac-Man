@@ -1,7 +1,7 @@
 """Pac-Man entity: player position, buffered movement and animation."""
 import pygame
-from game_engine.tools.level_tools import LevelTools
-from game_engine.tools.parser import ConfigParser
+from ...pacman_engine.tools.level_tools import LevelTools
+from ...pacman_engine.tools.parser import ConfigParser
 
 
 class Pacman:

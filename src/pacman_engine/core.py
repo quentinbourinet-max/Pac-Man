@@ -20,8 +20,8 @@ class Game:
         self.parser = ConfigParser(custom_config_path)
         self.config = self.parser.config
         assert self.config.paths is not None
-        self.parser.ensure_highscores_initialized(
-            self.config.paths.highscores)
+        # self.parser.ensure_highscores_initialized(
+        #     self.config.paths.highscores)
         self.width = self.config.window.width
         self.height = self.config.window.height
         self.fps = self.config.window.fps
@@ -30,8 +30,7 @@ class Game:
         pygame.init()
         self._windowed_size = (self.width, self.height)
         self.fullscreen = False
-        self.screen = pygame.display.set_mode((self.width, self.height))
-
+        self.screen = pygame.display.set_mode((0, 0), pygame.RESIZABLE)
         pygame.display.set_caption(self.config.window.title)
         self.clock = pygame.time.Clock()
         self.registry: dict[str, type[Scene]] = {
