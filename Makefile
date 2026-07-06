@@ -3,10 +3,10 @@
 CONFIG ?= data/config.json
 
 run:
-	python3 pac-man.py $(CONFIG)
+	uv run python pac-man.py $(CONFIG)
 
 debug:
-	python3 -m pdb pac-man.py $(CONFIG)
+	uv run python -m pdb pac-man.py $(CONFIG)
 
 # §makefile:ENV ---------------------------------------------------------------
 
@@ -19,25 +19,24 @@ clean:
 	.pytest_cache
 
 install:
-	pip install ./mazegenerator-*.whl
-	pip install pygame
+	uv sync
 
 install-lint:
-	pip install flake8 mypy
+	uv add --dev flake8 mypy
 
 # §makefile:LINT --------------------------------------------------------------
 
 MYPY_FLAGS = \
-			--warn-return-any \
-			--warn-unused-ignores \
-			--ignore-missing-imports \
-			--disallow-untyped-defs \
-			--check-untyped-defs
+	--warn-return-any \
+	--warn-unused-ignores \
+	--ignore-missing-imports \
+	--disallow-untyped-defs \
+	--check-untyped-defs
 
 lint:
-	flake8 src/
-	mypy $(MYPY_FLAGS) pac-man.py src/
+	uv run flake8 src/
+	uv run mypy $(MYPY_FLAGS) pac-man.py src/
 
 lint-strict:
-	flake8 src/
-	mypy --strict pac-man.py src/
+	uv run flake8 src/
+	uv run mypy --strict pac-man.py src/

@@ -2,7 +2,7 @@
 scores section."""
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
-    from ..tools.parser import ConfigParser
+    from tools.parser import ConfigParser
 
 
 def load(parser: "ConfigParser", mode: str) -> list[dict]:

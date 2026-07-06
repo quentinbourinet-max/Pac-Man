@@ -1,7 +1,6 @@
 """Engine runtime: owns the window, the main loop and the active scene."""
 
 import pygame
-import asyncio
 from pathlib import Path
 from .definitions import QUIT, Scene
 from .scenes.main_menu import MainMenu
@@ -20,8 +19,8 @@ class Game:
         self.parser = ConfigParser(custom_config_path)
         self.config = self.parser.config
         assert self.config.paths is not None
-        # self.parser.ensure_highscores_initialized(
-        #     self.config.paths.highscores)
+        self.parser.ensure_highscores_initialized(
+            self.config.paths.highscores)
         self.width = self.config.window.width
         self.height = self.config.window.height
         self.fps = self.config.window.fps
@@ -30,7 +29,8 @@ class Game:
         pygame.init()
         self._windowed_size = (self.width, self.height)
         self.fullscreen = False
-        self.screen = pygame.display.set_mode((0, 0), pygame.RESIZABLE)
+        self.screen = pygame.display.set_mode(self._windowed_size,
+                                              pygame.RESIZABLE)
         pygame.display.set_caption(self.config.window.title)
         self.clock = pygame.time.Clock()
         self.registry: dict[str, type[Scene]] = {
@@ -78,26 +78,22 @@ class Game:
             self.paused_scene = None
             pygame.mixer.music.unpause()
 
-    async def run(self) -> None:
+    def run(self) -> None:
         """Core function for runtime ignition loop maintenance."""
         self.running = True
         while self.running:
             framesync = self.clock.tick(self.fps) / 1000.0
             events = pygame.event.get()
-
             for event in events:
                 if event.type == pygame.QUIT:
                     self.running = False
                 elif (event.type == pygame.KEYDOWN
                       and event.key == pygame.K_F11):
                     self.toggle_fullscreen()
-
             target = self.scene.handle_events(events)
             self.scene.update(framesync)
             self.scene.render(self.screen)  # type: ignore
             pygame.display.flip()
             if target is not None:
                 self.change_scene(target)
-            await asyncio.sleep(0)
-
         pygame.quit()

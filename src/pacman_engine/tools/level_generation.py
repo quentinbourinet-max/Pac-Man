@@ -1,6 +1,6 @@
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
-    from ..tools.parser import ConfigParser
+    from tools.parser import ConfigParser
 from typing import List
 from mazegen import MazeGenerator
 

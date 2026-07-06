@@ -123,7 +123,7 @@ class LevelTools:
         Level 1 uses a fixed seed (reproducible); subsequent levels are
         randomly generated on each call (subject VI.1)."""
         self.level_id = level_id
-        from pacman_engine.tools.level_generation import generate_grid
+        from ...pacman_engine.tools.level_generation import generate_grid
         grid = generate_grid(self.parser, level_id)
         if not grid:
             print(f'Error: could not generate level {level_id}.')
