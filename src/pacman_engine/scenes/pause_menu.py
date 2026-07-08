@@ -14,6 +14,7 @@ class PauseMenu(Scene):
 
     def __init__(self, game: "Game",
                  background_surface: pygame.Surface) -> None:
+        """Store the frozen snapshot and build the Resume / Menu buttons."""
         super().__init__(game)
         self.background_surface = background_surface
         cx = self.game.width // 2

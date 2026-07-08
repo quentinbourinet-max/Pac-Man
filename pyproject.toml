@@ -1,13 +1,13 @@
 [project]
 name = "pac-man"
 version = "0.1.0"
-description = "Add your description here"
+description = "A complete, playable Pac-Man game written in Python with pygame."
 readme = "README.md"
 requires-python = ">=3.10"
 dependencies = [
     "pygame>=2.6.0",
     "pydantic>=2.0.0",
-    "mazegen", # Déclarez le nom du paquet
+    "mazegen", # the externally-assigned A-Maze-ing package (used as-is)
 ]
 
 [tool.uv.sources]

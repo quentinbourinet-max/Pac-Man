@@ -1,4 +1,4 @@
-name: Générer l'exécutable Windows
+name: Build Windows executable
 
 on:
   push:
@@ -10,35 +10,35 @@ jobs:
     runs-on: windows-latest
 
     steps:
-    - name: Récupérer le code du projet
+    - name: Check out the project code
       uses: actions/checkout@v4
 
-    - name: Configurer Python
+    - name: Set up Python
       uses: actions/setup-python@v5
       with:
         python-version: '3.10'
 
-    - name: Installer PyInstaller et les dépendances
+    - name: Install PyInstaller and dependencies
       run: |
         python -m pip install --upgrade pip
         pip install pyinstaller pygame
         pip install pydantic
-        pip install mazegen-1.0.0-py3-none-any.whl
+        pip install deps/mazegen-1.0.0-py3-none-any.whl
 
-    - name: Compiler avec PyInstaller
+    - name: Build with PyInstaller
       run: |
-        # Ajout de --onefile et modification de ":" en ";"
-        pyinstaller --onefile --clean --noconsole --add-data "data;data" pac-man.py 
+        # --onefile bundles everything; on Windows --add-data uses ";"
+        pyinstaller --onefile --clean --noconsole --add-data "data;data" pac-man.py
 
-    - name: Créer le pack de jeu (EXE + DATA)
+    - name: Assemble the game pack (EXE + DATA)
       run: |
-        # Utilisation de la syntaxe PowerShell native pour éviter les erreurs
+        # Native PowerShell syntax to avoid shell errors
         New-Item -ItemType Directory -Force -Path release
         Copy-Item -Path dist\pac-man.exe -Destination release\
         Copy-Item -Path data -Destination release\data -Recurse
         Compress-Archive -Path release\* -DestinationPath PacMan42-Windows.zip
 
-    - name: Mettre à disposition le fichier ZIP
+    - name: Upload the ZIP file
       uses: actions/upload-artifact@v4
       with:
         name: PacMan42-Windows-Version

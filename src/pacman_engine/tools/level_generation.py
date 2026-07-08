@@ -1,6 +1,8 @@
+"""Maze generation boundary: a single adapter over the A-Maze-ing package."""
+
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
-    from tools.parser import ConfigParser
+    from .parser import ConfigParser
 from typing import List
 from mazegen import MazeGenerator
 
@@ -13,6 +15,7 @@ class MazeAdapter:
     """
 
     def __init__(self, width: int, height: int, perfect: bool = False) -> None:
+        """Store the maze dimensions and the perfect/braided corridor flag."""
         self.width = width
         self.height = height
         self.perfect = perfect

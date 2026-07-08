@@ -1,10 +1,16 @@
 #!/usr/bin/env python3
+"""CLI entry point: validate the single .json argument and launch the game."""
 import sys
 from pathlib import Path
 import runpy
 
 
 def main() -> int:
+    """Validate argv (one existing .json path) then run the game module.
+
+    Return 0 on a clean run, 1 on any misuse or runtime error, so the process
+    exits with a clear message and never a raw Python traceback.
+    """
     if len(sys.argv) != 2:
         print("Usage: uv run pac-man.py <path_to_config.json>",
               file=sys.stderr)

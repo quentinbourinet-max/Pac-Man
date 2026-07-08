@@ -15,13 +15,13 @@ class EndScreen(Scene):
     """Shows the outcome + final score, takes a name, saves the highscore."""
 
     def __init__(self, game: "Game") -> None:
+        """Read the outcome and final score, build the name-entry field."""
         super().__init__(game)
         self.score = getattr(game, "final_score", 0)
         self.won = getattr(game, "final_won", False)
         self.mode = game.mode
         size = max(18, game.height // 28)
         try:
-            assert self.game.config.paths is not None
             font_path = str(self.game.config.paths.font)
             self.font = pygame.font.Font(font_path, size)
         except (FileNotFoundError, pygame.error):

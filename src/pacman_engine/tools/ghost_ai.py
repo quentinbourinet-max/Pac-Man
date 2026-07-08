@@ -1,6 +1,6 @@
 """Ghost pathfinding helpers: BFS chase, flee and random moves."""
 
-from ...pacman_engine.tools.level_tools import LevelTools
+from .level_tools import LevelTools
 import random
 
 
@@ -8,6 +8,7 @@ class GhostAI:
     """Stateless movement policies a ghost queries each step."""
 
     def __init__(self) -> None:
+        """Set up the opposite-direction lookup used to avoid U-turns."""
         self.opposing = {"UP": "DOWN",
                          "DOWN": "UP",
                          "LEFT": "RIGHT",

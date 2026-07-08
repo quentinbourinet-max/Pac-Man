@@ -16,9 +16,10 @@ class Game:
     """The single engine: one window, one loop, one active scene at a time."""
 
     def __init__(self, custom_config_path: Path | None = None) -> None:
+        """Load config, init pygame and the window, build the scene registry
+        and start on the main menu."""
         self.parser = ConfigParser(custom_config_path)
         self.config = self.parser.config
-        assert self.config.paths is not None
         self.parser.ensure_highscores_initialized(
             self.config.paths.highscores)
         self.width = self.config.window.width
@@ -67,8 +68,7 @@ class Game:
         """Pause the game: create a PauseMenu while keeping the play scene."""
         screenshot = self.screen.copy()
         self.paused_scene = self.scene
-        self.scene = PauseMenu(self,
-                               background_surface=screenshot)  # type: ignore
+        self.scene = PauseMenu(self, background_surface=screenshot)
         pygame.mixer.music.pause()
 
     def resume_game(self) -> None:
@@ -92,7 +92,7 @@ class Game:
                     self.toggle_fullscreen()
             target = self.scene.handle_events(events)
             self.scene.update(framesync)
-            self.scene.render(self.screen)  # type: ignore
+            self.scene.render(self.screen)
             pygame.display.flip()
             if target is not None:
                 self.change_scene(target)

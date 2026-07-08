@@ -34,9 +34,9 @@ MYPY_FLAGS = \
 	--check-untyped-defs
 
 lint:
-	uv run flake8 src/
+	uv run flake8 src/ pac-man.py
 	uv run mypy $(MYPY_FLAGS) pac-man.py src/
 
 lint-strict:
-	uv run flake8 src/
-	uv run mypy --strict pac-man.py src/
+	uv run flake8 src/ pac-man.py
+	uv run mypy --strict --ignore-missing-imports pac-man.py src/

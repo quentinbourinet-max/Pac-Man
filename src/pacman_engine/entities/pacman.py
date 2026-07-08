@@ -1,7 +1,7 @@
 """Pac-Man entity: player position, buffered movement and animation."""
 import pygame
-from ...pacman_engine.tools.level_tools import LevelTools
-from ...pacman_engine.tools.parser import ConfigParser
+from ..tools.level_tools import LevelTools
+from ..tools.parser import ConfigParser
 
 
 class Pacman:
@@ -10,6 +10,7 @@ class Pacman:
     def __init__(self, spawn_coord: list[int] | None = None,
                  speed: float = 4.0,
                  parser: ConfigParser | None = None) -> None:
+        """Set up spawn, speed, sprite frames and the initial reset state."""
         self.speed = speed
         self.spawn_coord = list(spawn_coord) if spawn_coord else [9, 9]
         self.parser = parser if parser else ConfigParser()
@@ -38,7 +39,7 @@ class Pacman:
                 sprites_dir / "2.png")).convert_alpha()
             img3 = pygame.image.load(str(
                 sprites_dir / "3.png")).convert_alpha()
-            self.frames = [img1, img2, img3, img2]  # type: ignore
+            self.frames = [img1, img2, img3, img2]
         except FileNotFoundError:
             print(" /!\\ Pac-Man sprites not found.")
             self.frames = []
