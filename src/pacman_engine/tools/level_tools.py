@@ -1,6 +1,6 @@
 """Tools and utils for game-levels while playtime."""
 
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, cast
 if TYPE_CHECKING:
     from ..tools.parser import ConfigParser
 
@@ -124,7 +124,7 @@ class LevelTools:
         randomly generated on each call (subject VI.1)."""
         self.level_id = level_id
         from ...pacman_engine.tools.level_generation import generate_grid
-        grid = generate_grid(self.parser, level_id)
+        grid = cast(list[list[int]], generate_grid(self.parser, level_id))
         if not grid:
             print(f'Error: could not generate level {level_id}.')
         return grid

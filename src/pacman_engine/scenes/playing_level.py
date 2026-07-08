@@ -39,7 +39,7 @@ class PlayingLevel(Scene):
         self.remaining_time = self.time_limit
         self.points_per_gum = int(self.cfg["points_per_gum"])
         self.points_per_power_gum = int(self.cfg["points_per_power_gum"])
-        self.points_per_ghost = int(self.cfg["points_1st_ghost"])
+        self.points_per_ghost = int(self.cfg["ghost_points"])
         self.frightened_duration = float(self.cfg["frightened_duration"])
         self.level_transition_timer = 0.0
         self.base_ghost_speed = float(self.cfg["ghost_speed"]) * speed_mult

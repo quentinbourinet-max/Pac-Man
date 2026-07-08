@@ -43,6 +43,23 @@ class LevelsConfig(BaseModel):
     dims: List[List[int]] = Field(default_factory=list)
     seed: int = 42
 
+    @field_validator('dims')
+    @classmethod
+    def validate_level_dimensions(cls, v: List[List[int]]) -> List[List[int]]:
+        """Checks that each sub-level in the 'dims' list is at least 10x10."""
+        for index, dim in enumerate(v):
+            if len(dim) != 2:
+                raise ValueError(
+                    f"The configuration at index {index} must "
+                    "be an array of 2 integers [width, height]."
+                )
+            if dim[0] < 10 or dim[1] < 10:
+                raise ValueError(
+                    f"The dimensions of the level at index {index} "
+                    f"({dim[0]}x{dim[1]}) cannot be smaller than 10x10."
+                )
+        return v
+
 
 class CommonGameConfig(BaseModel):
     speed_multiplier: float = Field(default=1.0, ge=0.1, le=3.0)
@@ -53,7 +70,7 @@ class CommonGameConfig(BaseModel):
     collision_radius_ratio: float = Field(default=0.7, ge=0.1, le=1.5)
     points_per_gum: int = Field(default=10, ge=0)
     points_per_power_gum: int = Field(default=50, ge=0)
-    points_1st_ghost: int = Field(default=200, ge=0)
+    ghost_points: int = Field(default=200, ge=0)
 
 
 class ModeConfig(BaseModel):

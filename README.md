@@ -89,7 +89,7 @@ Top level blocks:
 - `levels`: `width`, `height`, an optional per-level `dims` list of
   `[width, height]` pairs, and `seed` (the fixed seed of the first level).
 - `game.common`: scoring (`points_per_gum`, `points_per_power_gum`,
-  `points_1st_ghost`) and tuning (`speed_multiplier`, `ghost_speed`,
+  `ghost_points`) and tuning (`speed_multiplier`, `ghost_speed`,
   `ghost_frightened_speed`, `ghost_dead_speed_mult`, `pacman_speed`,
   `collision_radius_ratio`).
 - `game.<mode>`: per-mode values (`lives`, `level_max_time`,
