@@ -99,48 +99,30 @@ class LevelTools:
 
     def init_item_grid(self,
                        exclude: list[int] | None = None) -> list[list[int]]:
-        """Build the item grid (0=empty, 1=pac-gum, 2=super pac-gum).
-
-        Pac-gums fill every open corridor cell except the four corner ghost
-        spawns and Pac-Man's start cell (``exclude``, a ``[col, row]``). A
-        super pac-gum is then placed on an open cell adjacent to each corner
-        (A6/M21: the corners host the ghost spawns, so the power pellet sits
-        next to them rather than on them).
-        """
+        """Build the item grid (0=empty, 1=pac-gum, 2=super pac-gum)."""
         rows = len(self.grid)
         cols = len(self.grid[0])
         item_grid = [[0 for _ in range(cols)] for _ in range(rows)]
-        # Corners, as (row, col): these are the ghost spawns, kept item-free.
         corners = [
             (0, 0), (0, cols - 1), (rows - 1, 0), (rows - 1, cols - 1)
         ]
         for r in range(rows):
             for c in range(cols):
-                if not self.is_open_cell(c, r):
+                if not self.is_open_cell(c, r) or (
+                        exclude is not None and [c, r] == exclude):
                     continue
-                if (r, c) in corners:
-                    continue
-                if exclude is not None and [c, r] == exclude:
-                    continue
-                item_grid[r][c] = 1
-        neighbours = [(1, 0), (-1, 0), (0, 1), (0, -1),
-                      (1, 1), (-1, -1), (1, -1), (-1, 1)]
-        for cr, cc in corners:
-            for dr, dc in neighbours:
-                nr, nc = cr + dr, cc + dc
-                if not self.is_open_cell(nc, nr) or (nr, nc) in corners:
-                    continue
-                if exclude is not None and [nc, nr] == exclude:
-                    continue
-                item_grid[nr][nc] = 2
-                break
+                is_corner = (r, c) in corners
+                if is_corner:
+                    item_grid[r][c] = 2
+                else:
+                    item_grid[r][c] = 1
         return item_grid
 
     def load_map(self, level_id: int) -> list[list[int]]:
         """Generate this level's maze grid in memory (no disk persistence).
 
         Level 1 uses a fixed seed (reproducible); subsequent levels are
-        randomly generated on each call (subject VI.1)."""
+        randomly generated on each call."""
         self.level_id = level_id
         from .level_generation import generate_grid
         grid = generate_grid(self.parser, level_id)

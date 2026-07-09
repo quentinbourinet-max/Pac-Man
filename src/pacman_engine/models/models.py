@@ -11,7 +11,7 @@ def clamp_scalars(data: Any, bounds: Dict[str, Tuple[float, float]]) -> Any:
 
     Out-of-range values are clamped to the nearest bound; non-numeric values
     are dropped so the field default applies. Keeps a single bad entry from
-    failing validation and discarding the whole config (subject M3/A5).
+    failing validation and discarding the whole config.
     """
     if not isinstance(data, dict):
         return data
@@ -72,7 +72,7 @@ class WindowConfig(BaseModel):
     @model_validator(mode='before')
     @classmethod
     def _clamp(cls, data: Any) -> Any:
-        """Clamp out-of-range values instead of raising (M3/A5)."""
+        """Clamp out-of-range values instead of raising."""
         return clamp_scalars(data, {"width": (400, 2200),
                                     "height": (300, 1080),
                                     "fps": (10, 144)})
@@ -89,7 +89,7 @@ class LevelsConfig(BaseModel):
     @model_validator(mode='before')
     @classmethod
     def _clamp(cls, data: Any) -> Any:
-        """Clamp the fallback width/height instead of raising (M3/A5)."""
+        """Clamp the fallback width/height instead of raising."""
         return clamp_scalars(data, {"width": (10, 50), "height": (10, 50)})
 
     @field_validator('dims')
@@ -99,7 +99,7 @@ class LevelsConfig(BaseModel):
 
         Malformed entries (not a [width, height] pair) are dropped and any
         out-of-range side is clamped, so an edited config never crashes the
-        game (subject M3/A5: clamp invalid values, continue).
+        game.
         """
         cleaned: List[List[int]] = []
         for dim in v:

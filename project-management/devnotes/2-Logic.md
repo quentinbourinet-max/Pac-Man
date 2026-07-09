@@ -299,8 +299,8 @@ walkable/item model the entities read through `is_move_possible`.
 | **Boundary** | Owns: requesting a level's grid (via `generate_grid`), building the item grid, wall-aware move checks, win check. NOT: generation internals, entity state. |
 | **Inputs** | level index; item grid; coord + direction. |
 | **Outputs** | maze grid; item grid (0 empty / 1 pacgum / 2 super); move-legal bool; level-complete bool. |
-| **Process** | 1. `load_map` asks `generate_grid(parser, level)` for an in-memory grid -> 2. `find_central_open_cell()` = open cell nearest the real centre (Pac-Man spawn) -> 3. `init_item_grid(exclude)` fills every open corridor cell with a pacgum (1) except the four corner ghost spawns and Pac-Man's start (`exclude`), then places a super-pacgum (2) on an open cell adjacent to each corner -> 4. move check tests both cells' shared edge bits -> 5. complete when no item > 0 remains. |
-| **Guarantees** | A move blocked by a wall bit is always rejected; Pac-Man never spawns in a wall; super-pacgums sit on an open cell adjacent to each corner (A6/M21), the corners and Pac-Man's start stay item-free; complete only once every pacgum and super-pacgum is eaten. |
+| **Process** | 1. `load_map` asks `generate_grid(parser, level)` for an in-memory grid -> 2. `find_central_open_cell()` = open cell nearest the real centre (Pac-Man spawn) -> 3. `init_item_grid(exclude)` fills every open corridor cell with a pacgum (1) except the four corners, which get a super-pacgum (2) instead (the corners are also the ghost spawns) -> 4. move check tests both cells' shared edge bits -> 5. complete when no item > 0 remains. |
+| **Guarantees** | A move blocked by a wall bit is always rejected; Pac-Man never spawns in a wall; super-pacgums sit on the four corners (same cells as the ghost spawns); complete only once every pacgum and super-pacgum is eaten. |
 | **Errors** | empty grid (generator failure) -> log + return empty (caller handles). |
 
 > Covers : M20, M21, M23, M28, M30, M24, A6, A7

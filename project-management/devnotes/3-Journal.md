@@ -1,4 +1,4 @@
-# 3-DebugLog.md - Pacman
+# 3-Journal.md - Pacman
 
 | DRAFT D.3 | Authors: qbourine, jferone | Journal of the implementation phase | Updated: 2026-07-08 |
 |---|---|---|---|
@@ -54,8 +54,9 @@ A final review pass over the refactored code and deliverables:
   and CI step name was translated (`models.py`, `parser.py`, `ghost.py`,
   `theme.py`, `pyproject.toml`, `.github/workflows/build-windows.yml`). Warning
   prints were unified to a single English style.
-- **Docstrings (F6)**: all module, class, function and method docstrings were
-  completed. An AST coverage check reports **0 gaps** (module + class + method).
+- **Docstrings (F6)**: every module, class, function and method carries a
+  docstring; empty package `__init__.py` files are intentionally left bare.
+  AST coverage reports **0 gaps** across all non-empty modules, classes and methods.
 - **Lint**: `make lint` was failing with five `Unused "type: ignore"` errors;
   the stale ignores were removed. `flake8` and `mypy` (Makefile flags) are green.
 - **Imports**: two `TYPE_CHECKING` imports used a non-relative `from tools.parser`
@@ -97,10 +98,13 @@ per-field residual was then closed in the hardening pass (section 5): every
 numeric field now clamps, so no single field can discard the config.
 
 ### 4.3 Super-pacgum placement (A6 / M21) (FIXED)
-`init_item_grid` used to mark the open **corner** cells (the ghost spawns) as
-super-pacgums. It now leaves the corners item-free and places each super-pacgum
-on an open cell **adjacent** to its corner, as A6 intended. Verified: 4 supers,
-each adjacent to a corner, corners empty.
+A mid-audit commit had moved the super-pacgums off the corners onto the adjacent
+cells, following a drifted reading of A6/M21. D0 (VI.1/VI.4) states super-pacgums
+sit **in the 4 corners of the maze**, so it was reverted: `init_item_grid` places
+each super-pacgum (item `2`) directly **on** the four corner cells (shared with
+the ghost spawns), every other open corridor cell gets a pacgum, and the Pac-Man
+start cell is excluded. D1 (M21/A6) and D2 (`level_tools`) were re-synced to match.
+Verified at runtime: supers land on (0,0), (0,W-1), (H-1,0), (H-1,W-1).
 
 ### 4.4 Pac-Man start cell not excluded from pacgums (FIXED)
 `init_item_grid(exclude=...)` receives a single `[col, row]` but tested

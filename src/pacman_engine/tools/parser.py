@@ -119,7 +119,7 @@ class ConfigParser:
         The merge starts from the model defaults so every consumed key is
         always present, then clamps the numeric values into their safe range
         and repairs invalid duration lists, so an incomplete or out-of-range
-        game config cannot crash the game (subject M3/A5).
+        game config cannot crash the game.
         """
         defaults: dict[str, Any] = {**CommonGameConfig().model_dump(),
                                     **ModeConfig().model_dump()}

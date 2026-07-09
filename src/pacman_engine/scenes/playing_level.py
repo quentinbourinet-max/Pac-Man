@@ -233,7 +233,7 @@ class PlayingLevel(Scene):
             tile_size = 20
         self.remaining_time -= framesync
         if self.remaining_time <= 0:
-            # O4: timeout costs one life and resets the level (no instant
+            # Timeout costs one life and resets the level (no instant
             # game-over); game-over only happens once all lives are gone.
             self.lives -= 1
             if self.lives <= 0:

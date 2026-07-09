@@ -50,7 +50,7 @@ def generate_grid(parser: "ConfigParser", level: int) -> List[List[int]]:
     """Generate a fresh maze grid for a level, in memory (no persistence).
 
     Level 1 uses a fixed seed (reproducible); subsequent levels are randomly
-    generated on each call (subject VI.1: only the first level is seeded).
+    generated on each call.
     Returns [] on generator failure, which stays non-fatal for the caller.
     """
     try:

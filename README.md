@@ -154,9 +154,9 @@ Each cell is stored as a wall bitmask: bit 1 is the top wall, bit 2 the right
 wall, bit 4 the bottom wall, bit 8 the left wall, and the value 15 marks a
 solid cell. Pac-Man starts on the open cell closest to the real centre of the
 current maze (`find_central_open_cell`); the four ghosts spawn at the maze
-corners; super pac-gums are placed on an open cell adjacent to each corner
-(the corner cells themselves host the ghost spawns); ordinary pac-gums fill the
-remaining open corridor cells, leaving the corners and Pac-Man's start empty.
+corners; super pac-gums are placed directly on the four maze corners (the same
+cells as the ghost spawns); ordinary pac-gums fill the remaining open corridor
+cells.
 
 ## Implementation
 
@@ -235,7 +235,7 @@ Planning and tracking documents live under `project-management/devnotes`:
   ambiguity from the subject, with a done or not-done state.
 - `2-Logic.md` is the system design, one block per module with its boundary,
   inputs, outputs, process, guarantees and errors.
-- `3-DebugLog.md` keeps the development log and debug debrief.
+- `3-Journal.md` keeps the development log and debug debrief.
 
 These documents record the team decisions, the assumptions made on unclear
 points, and the state of the work over time.
