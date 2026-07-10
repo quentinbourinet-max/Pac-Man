@@ -68,7 +68,8 @@ class Game:
         """Pause the game: create a PauseMenu while keeping the play scene."""
         screenshot = self.screen.copy()
         self.paused_scene = self.scene
-        self.scene = PauseMenu(self, background_surface=screenshot)
+        self.scene = PauseMenu(self,
+                               background_surface=screenshot)  # type: ignore
         pygame.mixer.music.pause()
 
     def resume_game(self) -> None:
@@ -92,7 +93,7 @@ class Game:
                     self.toggle_fullscreen()
             target = self.scene.handle_events(events)
             self.scene.update(framesync)
-            self.scene.render(self.screen)
+            self.scene.render(self.screen)  # type: ignore
             pygame.display.flip()
             if target is not None:
                 self.change_scene(target)

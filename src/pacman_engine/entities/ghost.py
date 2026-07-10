@@ -55,12 +55,12 @@ class Ghost:
                         frame_path = folder / f"{ghost_name}_{suffix}_{i}.png"
                         frame = pygame.image.load(str(
                             frame_path)).convert_alpha()
-                        self.frames[pygame_key].append(frame)
+                        self.frames[pygame_key].append(frame)  # type: ignore
                 self.frames["SCARED"] = []
                 for i in range(1, 3):
                     path = folder / f"scared_{i}.png"
                     self.frames["SCARED"].append(pygame.image.load(
-                        str(path)).convert_alpha())
+                        str(path)).convert_alpha())  # type: ignore
         except Exception as e:
             print(f" /!\\ Can't load sprites for {self.name} : {e}")
             self.frames = {}

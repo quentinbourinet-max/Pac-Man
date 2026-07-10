@@ -39,7 +39,7 @@ class Pacman:
                 sprites_dir / "2.png")).convert_alpha()
             img3 = pygame.image.load(str(
                 sprites_dir / "3.png")).convert_alpha()
-            self.frames = [img1, img2, img3, img2]
+            self.frames = [img1, img2, img3, img2]  # type: ignore
         except FileNotFoundError:
             print(" /!\\ Pac-Man sprites not found.")
             self.frames = []
