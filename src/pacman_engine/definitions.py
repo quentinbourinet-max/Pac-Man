@@ -19,6 +19,7 @@ class Scene(ABC):
     """
 
     def __init__(self, game: "Game") -> None:
+        """Store the engine reference the scene uses to drive transitions."""
         self.game = game
 
     @abstractmethod

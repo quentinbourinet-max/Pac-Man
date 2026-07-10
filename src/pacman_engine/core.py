@@ -16,9 +16,10 @@ class Game:
     """The single engine: one window, one loop, one active scene at a time."""
 
     def __init__(self, custom_config_path: Path | None = None) -> None:
+        """Load config, init pygame and the window, build the scene registry
+        and start on the main menu."""
         self.parser = ConfigParser(custom_config_path)
         self.config = self.parser.config
-        assert self.config.paths is not None
         self.parser.ensure_highscores_initialized(
             self.config.paths.highscores)
         self.width = self.config.window.width

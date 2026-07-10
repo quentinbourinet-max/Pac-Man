@@ -2,45 +2,41 @@
     "original": [
         {
             "name": "SAYCA",
-            "score": 2620
+            "score": 5620
         },
         {
             "name": "CAPYBARA",
-            "score": 1360
+            "score": 3360
         },
         {
-            "name": "Pac, The Man",
-            "score": 1120
+            "name": "PacTheMan",
+            "score": 2120
         },
         {
-            "name": "PLAYER",
-            "score": 0
+            "name": "MadPac",
+            "score": 1800
+        },
+        {
+            "name": "PacMax",
+            "score": 810
         }
     ],
     "ironman": [
         {
             "name": "Doom Guy",
-            "score": 66600
+            "score": 16660
         },
         {
-            "name": "Man, The Pac",
-            "score": 1120
+            "name": "ManThePac",
+            "score": 4200
         },
         {
             "name": "SAYCA",
-            "score": 480
+            "score": 3850
         },
         {
-            "name": "kmglkefg",
-            "score": 230
-        },
-        {
-            "name": "tete",
-            "score": 100
-        },
-        {
-            "name": "PLAYER",
-            "score": 0
+            "name": "Thousand",
+            "score": 1000
         }
     ]
 }

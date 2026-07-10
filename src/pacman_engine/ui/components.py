@@ -11,6 +11,7 @@ class Button:
     def __init__(self, game: "Game", center: tuple[int, int],
                  size: tuple[int, int],
                  label: str, font: pygame.font.Font) -> None:
+        """Build the button rect from a centre and size, label and font."""
         self.game = game
         self.rect = pygame.Rect(0, 0, *size)
         self.rect.center = center
@@ -48,6 +49,7 @@ class TextInput:
                  size: tuple[int, int],
                  font: "pygame.font.Font | None",
                  max_length: int = 10) -> None:
+        """Build the input box with its geometry, font and max length."""
         self.game = game
         self.rect = pygame.Rect(0, 0, *size)
         self.rect.center = center

@@ -1,6 +1,6 @@
 """Tools and utils for game-levels while playtime."""
 
-from typing import TYPE_CHECKING, cast
+from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from ..tools.parser import ConfigParser
 
@@ -9,6 +9,7 @@ class LevelTools:
     """Loads a level grid and exposes wall-aware moves + item placement."""
 
     def __init__(self, parser: "ConfigParser", level_id: int) -> None:
+        """Store the parser, build the direction map, load the level grid."""
         self.parser = parser
         self.DIR_MAP = {
                        "UP": (0, -1),
@@ -108,7 +109,7 @@ class LevelTools:
         for r in range(rows):
             for c in range(cols):
                 if not self.is_open_cell(c, r) or (
-                        exclude and [c, r] in exclude):
+                        exclude is not None and [c, r] == exclude):
                     continue
                 is_corner = (r, c) in corners
                 if is_corner:
@@ -121,10 +122,10 @@ class LevelTools:
         """Generate this level's maze grid in memory (no disk persistence).
 
         Level 1 uses a fixed seed (reproducible); subsequent levels are
-        randomly generated on each call (subject VI.1)."""
+        randomly generated on each call."""
         self.level_id = level_id
-        from ...pacman_engine.tools.level_generation import generate_grid
-        grid = cast(list[list[int]], generate_grid(self.parser, level_id))
+        from .level_generation import generate_grid
+        grid = generate_grid(self.parser, level_id)
         if not grid:
             print(f'Error: could not generate level {level_id}.')
         return grid

@@ -1,6 +1,8 @@
+"""Maze generation boundary: a single adapter over the A-Maze-ing package."""
+
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
-    from tools.parser import ConfigParser
+    from .parser import ConfigParser
 from typing import List
 from mazegen import MazeGenerator
 
@@ -13,6 +15,7 @@ class MazeAdapter:
     """
 
     def __init__(self, width: int, height: int, perfect: bool = False) -> None:
+        """Store the maze dimensions and the perfect/braided corridor flag."""
         self.width = width
         self.height = height
         self.perfect = perfect
@@ -47,7 +50,7 @@ def generate_grid(parser: "ConfigParser", level: int) -> List[List[int]]:
     """Generate a fresh maze grid for a level, in memory (no persistence).
 
     Level 1 uses a fixed seed (reproducible); subsequent levels are randomly
-    generated on each call (subject VI.1: only the first level is seeded).
+    generated on each call.
     Returns [] on generator failure, which stays non-fatal for the caller.
     """
     try:

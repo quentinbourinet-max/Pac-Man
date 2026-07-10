@@ -6,6 +6,7 @@ from .pacman_engine.core import Game
 
 
 def main() -> None:
+    """Build the game from an optional config path (argv[1]) and run it."""
     config_path = None
     if len(sys.argv) > 1:
         config_path = Path(sys.argv[1]).resolve()

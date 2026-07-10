@@ -3,8 +3,8 @@
 from typing import List, Dict
 import pygame
 from pathlib import Path
-from ...pacman_engine.tools.level_tools import LevelTools
-from ...pacman_engine.tools.ghost_ai import GhostAI
+from ..tools.level_tools import LevelTools
+from ..tools.ghost_ai import GhostAI
 from ..tools.parser import ConfigParser
 
 
@@ -15,6 +15,7 @@ class Ghost:
                  color: tuple[int, int, int], name: str,
                  dead_speed_mult: float = 2.0,
                  parser: ConfigParser | None = None) -> None:
+        """Set up this ghost's spawn, colour, name, AI and sprite frames."""
         self.name = name
         self.spawn_coord = list(spawn_coord)
         self.coord = list(spawn_coord)
@@ -37,8 +38,8 @@ class Ghost:
             self._load_sprites(parser)
 
     def _load_sprites(self, parser: ConfigParser) -> None:
-        """Charge 3 images distinctes (_1.png, _2.png, _3.png)
-        basées sur le chemin du config."""
+        """Load the directional and scared sprite frames for this ghost from
+        the folder configured under paths.ghosts."""
         try:
             folder_path = getattr(parser.config.paths, "ghosts", None)
 
@@ -174,7 +175,7 @@ class Ghost:
         cx, cy = int(gx + tile_size // 2), int(gy + tile_size // 2)
 
         if self.frames:
-            # 1. Choix du sprite selon l'état
+            # 1. Pick the sprite according to the current state
             if self.state == "scared":
                 sprite = self.frames["SCARED"][self.anim_frame]
             elif self.state == "normal":
@@ -183,7 +184,7 @@ class Ghost:
             else:
                 sprite = None
 
-            # 2. Affichage si un sprite est sélectionné
+            # 2. Blit it when a sprite was selected
             if sprite:
                 scale_factor = tile_size / max(sprite.get_width(),
                                                sprite.get_height())

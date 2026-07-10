@@ -2,9 +2,9 @@
 
 import pygame
 from typing import TYPE_CHECKING
-from ...pacman_engine.tools.level_tools import LevelTools
-from ...pacman_engine.entities.ghost import Ghost
-from ...pacman_engine.entities.pacman import Pacman
+from ..tools.level_tools import LevelTools
+from ..entities.ghost import Ghost
+from ..entities.pacman import Pacman
 from ..definitions import Scene
 from ..ui.theme import background
 
@@ -16,6 +16,7 @@ class PlayingLevel(Scene):
     """In-game scene: orchestrates entities, scoring, lives, timer and HUD."""
 
     def __init__(self, game: "Game") -> None:
+        """Build the level: entities, scoring, timer, phases, audio and HUD."""
         super().__init__(game)
         self.cfg = self.game.parser.get_gamemode_cfg(game.mode)
         try:
@@ -90,6 +91,7 @@ class PlayingLevel(Scene):
         self.pause_selection = 0
 
     def play_bg_music(self) -> None:
+        """Load and loop the background music, staying silent on failure."""
         try:
             music_path = str(self.game.parser.get_music_path())
             pygame.mixer.music.load(music_path)
@@ -231,7 +233,7 @@ class PlayingLevel(Scene):
             tile_size = 20
         self.remaining_time -= framesync
         if self.remaining_time <= 0:
-            # O4: timeout costs one life and resets the level (no instant
+            # Timeout costs one life and resets the level (no instant
             # game-over); game-over only happens once all lives are gone.
             self.lives -= 1
             if self.lives <= 0:

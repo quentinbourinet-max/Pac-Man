@@ -14,6 +14,7 @@ class InstructionsMenu(Scene):
     """How-to-play + credits screen. ESC or click returns to the menu."""
 
     def __init__(self, game: "Game") -> None:
+        """Load the instruction sections and build the responsive layout."""
         super().__init__(game)
         self.sections = self.game.parser.config.instructions
         h = game.height

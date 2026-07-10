@@ -14,6 +14,7 @@ class MainMenu(Scene):
     """Landing screen. Buttons request transitions to other scenes."""
 
     def __init__(self, game: "Game") -> None:
+        """Resolve the active game mode and build the menu buttons."""
         super().__init__(game)
         self._last_width = game.width
         self._last_height = game.height

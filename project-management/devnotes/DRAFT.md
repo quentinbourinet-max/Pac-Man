@@ -1,6 +1,6 @@
 # DRAFT | Fully documented system
 
-> Version: `v0.6` System Development Protocol
+> Version: `v0.50` System Development Protocol
 
 > Author: `sayca-jferone` => [Github (Sayca Labs)](https://github.com/Sayca-Jferone)
 
@@ -20,7 +20,7 @@ docs/devnotes/
     0-Order.md    <- customer's orders documents (ex: PDF 42network subject, a blurr idea/concept)
     1-Rules.md    <- source of truth : the problem readable in 60 seconds
     2-Logic.md    <- logical contract : traceable, debuggable logic without touching code
-    3-State.md    <- dev journal : decisions, retroactivity, resources, code debbug phases
+    3-Journal.md    <- dev journal : decisions, retroactivity, resources, code debbug phases
 ```
 
 ---
@@ -98,7 +98,7 @@ Valid exit if:
 
 ---
 
-## [D.2] - Architecture `2-Architecture.md`
+## [D.2] - Logic `2-Logic.md`
 
 ### Discipline
 - Specify. Do not implement.
@@ -145,7 +145,7 @@ Valid exit if:
 ### Output template
 
 ```markdown
-# 2-Architecture.md - [project name]
+# 2-Logic.md - [project name]
 
 | DRAFT D.2 | Author: [names] | Based on: 1-Rules.md ([date]) | Date: [YYYY-MM-DD] |
 |---|---|---|---|
@@ -210,7 +210,7 @@ Valid exit if:
 
 ### Critical rule : BIOPGE outside source code
 
-The contract lives in `docs/devnotes/2-Architecture.md`. **Not in the code.**
+The contract lives in `docs/devnotes/2-Logic.md`. **Not in the code.**
 
 Forbidden in source code:
 - BIOPGE tables in docstrings
@@ -230,7 +230,7 @@ LOGIC ERROR - D.2 return required
 Block  : [name]
 Issue  : [what is wrong in the contract]
 Impact : [what breaks if ignored]
-Fix    : [suggested amendment for 2-Architecture.md]
+Fix    : [suggested amendment for 2-Logic.md]
 Action : Pause. Amend. Re-validate. Resume.
 ```
 
@@ -238,19 +238,19 @@ Action : Pause. Amend. Re-validate. Resume.
 ```
 SYSTEMIC INCOHERENCE - D.1 escalation required
 Symptom    : [what the code produces or refuses to produce]
-Scope      : [list of impacted blocks in 2-Architecture.md]
+Scope      : [list of impacted blocks in 2-Logic.md]
 Root cause : [requirement misread / missing / contradictory]
 Action     : Pause D.3. Amend 1-Rules.md. Cascade D.2. Resume.
 ```
 
 ### Audit mode (injected existing code)
 
-1. Read the code + `2-Architecture.md` in full.
+1. Read the code + `2-Logic.md` in full.
 2. Per block: verify Boundary / Inputs / Process / Guarantees / Errors / Covers.
 3. Produce the report:
 
 ```markdown
-## Audit : 2-Architecture.md vs [source file] - [date]
+## Audit : 2-Logic.md vs [source file] - [date]
 
 ### `[block]`
 - [ ] Boundary   : PASS / FAIL - [detail]
@@ -274,7 +274,7 @@ Any leak = documentary violation to flag.
 ```
 D.3 - syntactic error        -> fix in place
 D.3 - logic error            -> D.2 : amend block -> re-validate -> resume D.3
-D.3 - contract contradicted  -> D.2 : amend 2-Architecture.md -> resume D.3
+D.3 - contract contradicted  -> D.2 : amend 2-Logic.md -> resume D.3
 D.3 - requirement misread    -> D.1 : amend 1-Rules.md -> cascade D.2 -> resume D.3
 D.3 - systemic incoherence   -> full D.1 -> full D.2 -> D.3
 ```

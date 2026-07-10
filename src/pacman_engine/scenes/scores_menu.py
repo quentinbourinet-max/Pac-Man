@@ -15,6 +15,7 @@ class ScoresMenu(Scene):
     """Reads the persisted board and renders the Top 10."""
 
     def __init__(self, game: "Game") -> None:
+        """Load the active mode's board and build the responsive layout."""
         super().__init__(game)
         self.mode = game.mode
         self.entries: list[dict[str, int | str]] = []
