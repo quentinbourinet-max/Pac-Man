@@ -2,9 +2,6 @@
 """CLI entry point: validate the single .json argument and launch the game."""
 import sys
 from pathlib import Path
-import runpy
-if False:
-    import src.__main__
 
 
 def main() -> int:
@@ -27,16 +24,10 @@ def main() -> int:
         print(f"Error: config file '{config_path}' not found.",
               file=sys.stderr)
         return 1
-    if getattr(sys, 'frozen', False):
-        base_dir = Path(sys._MEIPASS)  # type: ignore[attr-defined]
-    else:
-        base_dir = Path(__file__).parent
-    if str(base_dir) not in sys.path:
-        sys.path.insert(0, str(base_dir))
-    main_script = base_dir / "src" / "__main__.py"
-    sys.argv = [str(main_script), str(config_path)]
+    sys.argv = [sys.argv[0], str(config_path)]
     try:
-        runpy.run_module("src", run_name="__main__")
+        import src.__main__
+        src.__main__.main()
         return 0
     except Exception as e:
         print(f"Error running game: {e}", file=sys.stderr)

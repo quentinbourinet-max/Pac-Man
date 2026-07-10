@@ -229,7 +229,7 @@ the rest of the game reads settings only through the `ConfigParser` it holds
 
 ## Project Management
 
-Planning and tracking documents live under `project-management/devnotes`:
+Planning and tracking documents live under `project-management/DRAFT`:
 
 - `1-Rules.md` tracks every format, mandatory item, bonus, open point and
   ambiguity from the subject, with a done or not-done state.

@@ -3,20 +3,21 @@
 *Planning, tracking and debugging evidence for the 42 Pac-Man project by qbourine and jferone.*
 
 This directory holds the process evidence required by the subject (section VIII).
-The work was driven with **DRAFT**, jferone's system-development protocol (see `devnotes/DRAFT.md`):
+The work was driven with **DRAFT**, jferone's system-development protocol (see `DRAFT/DRAFT.md`):
 conditions, then logic, then implementation.
 
 ## Structure
 
 ```
 project-management/
-  README.md                -> this index
-  devnotes/
-    0-Order.pdf            -> the customer order: the 42 subject (PDF)
-    1-Rules.md             -> D.1 Conditions: the FMBOA requirement checklist
-    2-Logic.md             -> D.2 Logic: the BIOPGE contract, one block per unit
-    3-Journal.md           -> D.3 Embodiment: dev journal + debug debrief
-    DRAFT.md               -> the DRAFT v0.50 protocol itself (reference)
+  README.md        -> this index
+  DRAFT/
+    0-Subject.pdf  -> D.0 Requests: raw subject followed for the project completion
+    1-Rules.md     -> D.1 Conditions: the FMBOA requirement checklist for subject's specs review
+    2-Logic.md     -> D.2 Logic: the BIOPGE overview of our system, one block per logical unit
+    3-Journal.md   -> D.3 Implementation: dev journal, traces and debug debrief
+    DRAFT.md       -> DRAFT v0.50 protocol itself (reference)
+    LICENSE        -> jferone's DRAFT Apache 2.0 OpenSource license
 ```
 
 ## The layers

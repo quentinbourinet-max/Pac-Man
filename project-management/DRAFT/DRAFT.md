@@ -16,7 +16,7 @@
 
 ```markdown
 # Typical content of a DRAFT driven/audited/retroEngineered system
-docs/devnotes/
+docs/DRAFT/
     0-Order.md    <- customer's orders documents (ex: PDF 42network subject, a blurr idea/concept)
     1-Rules.md    <- source of truth : the problem readable in 60 seconds
     2-Logic.md    <- logical contract : traceable, debuggable logic without touching code
@@ -210,7 +210,7 @@ Valid exit if:
 
 ### Critical rule : BIOPGE outside source code
 
-The contract lives in `docs/devnotes/2-Logic.md`. **Not in the code.**
+The contract lives in `docs/DRAFT/2-Logic.md`. **Not in the code.**
 
 Forbidden in source code:
 - BIOPGE tables in docstrings
