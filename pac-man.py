@@ -3,6 +3,8 @@
 import sys
 from pathlib import Path
 import runpy
+if False:
+    import src.__main__
 
 
 def main() -> int:
