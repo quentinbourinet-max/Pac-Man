@@ -3,7 +3,7 @@
 import pygame
 from typing import TYPE_CHECKING
 from ..definitions import Scene
-from ..tools import highscore
+from ..tools.highscore import HighScoresTools
 from ..ui.theme import background
 from ..ui.components import Button
 
@@ -44,7 +44,7 @@ class ScoresMenu(Scene):
 
     def refresh(self) -> None:
         """Reload the board from disk and keep the top 10 by score."""
-        board = highscore.load(self.game.parser, self.mode)
+        board = HighScoresTools.load(self.game.parser, self.mode)
         self.entries = sorted(board, key=lambda e: e["score"],
                               reverse=True)[:10]
 

@@ -196,8 +196,8 @@ class ConfigParser:
         try:
             with open(highscores_path, "r", encoding="utf-8") as f:
                 data = json.load(f)
-                return sorted(data.get(mode, []), key=lambda x: x["score"],
-                              reverse=True)[:10]
+                scores: list[dict[str, Any]] = data.get(mode, [])
+                return scores
         except (JSONDecodeError, KeyError):
             return []
 

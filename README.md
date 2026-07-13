@@ -53,6 +53,7 @@ Other Makefile rules:
 - `make clean` removes `__pycache__`, `.mypy_cache` and temporary files.
 - `make lint` runs `flake8` and `mypy`.
 - `make lint-strict` runs `flake8` and `mypy --strict`.
+- `make build` run pyinstaller to build the executable.
 
 Controls:
 

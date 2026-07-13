@@ -209,3 +209,25 @@ class GameConfigRoot(BaseModel):
     scores: Dict[str, List[Dict[str, Any]]] = Field(default_factory=dict)
     paths: PathsConfig = Field(default_factory=PathsConfig)
     instructions: Dict[str, List[str]] = Field(default_factory=dict)
+
+
+class HighScoreEntry(BaseModel):
+    """Model to check the highscores.json"""
+    name: str = Field(default="PLAYER")
+    score: int = Field(default=0, ge=0)
+
+    @field_validator('name', mode='before')
+    @classmethod
+    def check_name(cls, v: Any) -> str:
+        """Validate entry names"""
+        return str(v).strip()[:10] if v else "PLAYER"
+
+    @field_validator('score', mode='before')
+    @classmethod
+    def check_score(cls, v: Any) -> int:
+        """Validate entry scores"""
+        if isinstance(v, bool):
+            raise ValueError("Invalid entry")
+        if isinstance(v, str):
+            raise ValueError("Invalid entry")
+        return int(v)

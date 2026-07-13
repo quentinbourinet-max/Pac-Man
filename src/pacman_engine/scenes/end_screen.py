@@ -4,7 +4,7 @@ import pygame
 from typing import TYPE_CHECKING
 from ..definitions import Scene
 from ..ui.components import TextInput
-from ..tools import highscore
+from ..tools.highscore import HighScoresTools
 from ..ui.theme import background
 
 if TYPE_CHECKING:
@@ -38,7 +38,7 @@ class EndScreen(Scene):
     def submit(self) -> None:
         """Save the entered (or default) name + score to the highscore file."""
         name = self.input.value.strip()
-        highscore.save(self.game.parser, self.mode, name, self.score)
+        HighScoresTools.save(self.game.parser, self.mode, name, self.score)
 
     def handle_events(self, events: list[pygame.event.Event]) -> str | None:
         """Feed typing into the name field; Enter saves and returns to menu."""

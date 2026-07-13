@@ -3,8 +3,8 @@
 import sys
 from pathlib import Path
 import runpy
-if False:
-    import src.__main__
+# if False:
+#     import src.__main__
 
 
 def main() -> int:
@@ -37,6 +37,10 @@ def main() -> int:
     sys.argv = [str(main_script), str(config_path)]
     try:
         runpy.run_module("src", run_name="__main__")
+        return 0
+    except KeyboardInterrupt:
+        print("\n[INFO] Game stop by the player (Ctrl+C). Goodbye !",
+              file=sys.stderr)
         return 0
     except Exception as e:
         print(f"Error running game: {e}", file=sys.stderr)

@@ -8,6 +8,13 @@ run:
 debug:
 	uv run python -m pdb pac-man.py $(CONFIG)
 
+# §makefile:BUILD -------------------------------------------------------------
+
+.PHONY: build
+
+build:
+	uv run pyinstaller --onefile --clean --add-data "data:data" --exclude-module matplotlib pac-man.py
+
 # §makefile:ENV ---------------------------------------------------------------
 
 .PHONY: install install-lint clean lint lint-strict
@@ -16,7 +23,8 @@ clean:
 	rm -rf \
 	__pycache__ */__pycache__ */*/__pycache__ */*/*/__pycache__ \
 	.mypy_cache \
-	.pytest_cache
+	.pytest_cache \
+	.venv
 
 install:
 	uv sync

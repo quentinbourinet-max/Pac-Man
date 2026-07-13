@@ -8,7 +8,13 @@ dependencies = [
     "pygame>=2.6.0",
     "pydantic>=2.0.0",
     "mazegen", # the externally-assigned A-Maze-ing package (used as-is)
+
 ]
 
 [tool.uv.sources]
 mazegen = { path = "deps/mazegen-1.0.0-py3-none-any.whl" }
+
+[dependency-groups]
+dev = [
+    "pyinstaller>=6.21.0",
+]
