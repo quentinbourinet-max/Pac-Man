@@ -1,0 +1,34 @@
+{
+    "original": [
+        {
+            "name": "SAYCA",
+            "score": 5620
+        },
+        {
+            "name": "CAPYBARA",
+            "score": 3360
+        },
+        {
+            "name": "PacTheMan",
+            "score": 2120
+        }
+    ],
+    "ironman": [
+        {
+            "name": "Doom Guy",
+            "score": 16660
+        },
+        {
+            "name": "ManThePac",
+            "score": 4200
+        },
+        {
+            "name": "SAYCA",
+            "score": 3850
+        },
+        {
+            "name": "Thousand",
+            "score": 1000
+        }
+    ]
+}
